@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+      name: "mandi"
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "214908566434-hjv2n1qg33e1ajaot0d5i6vktppnmskn.apps.googleusercontent.com"
+            client-secret: "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"
+#          facebook:
