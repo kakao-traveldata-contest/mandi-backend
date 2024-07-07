@@ -1,13 +1,13 @@
 package com.tourapi.mandi.domain.user.controller;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.tourapi.mandi.domain.user.dto.oauth.GoogleTokenResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,6 +30,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/dev")
+@Profile("local")
 public class DevSocialLoginController {
 
     @Value("${oauth2.google.client_id}")
@@ -53,10 +54,12 @@ public class DevSocialLoginController {
     @GetMapping("/google/login")
     public void loginGoogle(HttpServletResponse response) throws IOException {
         String uri = String.format(authUri
-                        + "?client_id=%s&response_type=code&redirect_uri=%s&scope=https://www.googleapis.com/auth/userinfo.email",
+                        + "?client_id=%s&response_type=code&redirect_uri=%s&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
                 clientId, redirectUri);
+        System.out.println(uri);
         response.sendRedirect(uri);
     }
+
 
     @GetMapping("/google/login/redirect")
     public String redirectGoogleLogin(
@@ -88,12 +91,4 @@ public class DevSocialLoginController {
         return "failed";
     }
 
-    private record GoogleTokenResponseDto(
-            @JsonProperty("access_token") String accessToken,
-            @JsonProperty("expires_in") Integer expiresIn,
-            @JsonProperty("token_type") String tokenType,
-            @JsonProperty("scope") String scope,
-            @JsonProperty("refresh_token") String refreshToken
-    ) {
-    }
 }

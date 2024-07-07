@@ -1,5 +1,6 @@
 package com.tourapi.mandi.global.security;
 
+import com.tourapi.mandi.domain.user.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import com.auth0.jwt.JWT;

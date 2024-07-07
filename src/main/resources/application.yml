@@ -1,15 +1,48 @@
 server:
-  port: 8080
-
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true # 응답에 대해 UTF-8 문자 인코딩을 강제로 적용하게 됩니다.
+  port: 8080 # 원하는 포트 번호로 변경, 예: 8000
 spring:
+  datasource:
+    driver-class-name: org.h2.Driver # H2 인메모리 DB를 사용하는 경우
+    url: jdbc:h2:mem:test;MODE=MySQL # H2 연결 URL 모드는 MySQL, 실제 서비스 시의 RDBMS는 MySQL로 설정
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update # 애플리케이션 시작 시 테이블을 자동으로 업데이트
+    show-sql: true # SQL 쿼리 로깅 활성화
+    database-platform: org.hibernate.dialect.MySQLDialect # MySQL 방식 사용
+    properties:
+      hibernate:
+        format_sql: true # Hibernate이 SQL 쿼리를 로그에 출력할 때 이를 보기 쉽게 포맷팅
+        default_batch_fetch_size: 100 # Hibernate의 기본 배치 페치 크기 설정
+
   application:
       name: "mandi"
 
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-#          facebook:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: ${GOOGLE_CLIENT_ID}
+#            client-secret: ${GOOGLE_CLIENT_SECRET}
+##
+#
+
+oauth2:
+  google:
+    client_id: ${google-client-id}
+    auth_uri: ${google-auth-uri}
+    token_uri: ${google-token-uri}
+    client_secret: ${google-client-secret}
+    redirect_uri: ${google-redirect-uri}
+
+
+access-jwt-secret-key: ${access-jwt-secret-key}
+refresh-jwt-secret-key: ${refresh-jwt-secret-key}
+
+
