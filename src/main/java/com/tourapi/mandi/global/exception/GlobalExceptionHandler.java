@@ -11,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.List;
 
@@ -51,6 +51,15 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<?> handleMissingHeaderException(Exception ex) {
+        return new ResponseEntity<>(ApiUtils.error("필요한 Request 헤더 값이 없습니다.",
+                HttpStatus.BAD_REQUEST.value(),
+                "04004"),
+                HttpStatus.BAD_REQUEST);
+    }
+
+
 
     @ExceptionHandler({Exception400.class, Exception401.class, Exception403.class, Exception404.class})
     public ResponseEntity<?> clientException(ClientException exception) {
@@ -67,7 +76,6 @@ public class GlobalExceptionHandler {
 
         String errorText = String.format("Location: %s, Cause: %s", exception.getStackTrace()[0].toString(),
                 exception.getMessage());
-
         log.error(errorText);
         return new ResponseEntity<>(
                 ApiUtils.error("internal server", HttpStatus.INTERNAL_SERVER_ERROR.value(), "05000"),
