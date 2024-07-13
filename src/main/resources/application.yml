@@ -45,4 +45,10 @@ oauth2:
 access-jwt-secret-key: ${access-jwt-secret-key}
 refresh-jwt-secret-key: ${refresh-jwt-secret-key}
 
-
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    disable-swagger-default-url: true
+    path: /mandi/swagger-ui/index.html
+  api-docs:
+    path: /mandi/api-docs
