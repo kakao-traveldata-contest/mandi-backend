@@ -1,34 +1,39 @@
 package com.tourapi.mandi.domain.user.controller;
 
-
-import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
 import com.tourapi.mandi.domain.user.dto.oauth.GoogleUserInfo;
 import com.tourapi.mandi.domain.user.service.GoogleService;
 import com.tourapi.mandi.domain.user.service.UserService;
-import com.tourapi.mandi.global.exception.Exception400;
 import com.tourapi.mandi.global.util.ApiUtils;
-import jakarta.servlet.http.HttpServletRequest;
+import com.tourapi.mandi.global.util.ApiUtils.ApiResult;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
+@Tag(name = "로그인 API 목록")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Validated
 public class LoginController {
 
     private final GoogleService googleService;
     private final UserService userService;
 
+    @Operation(summary = "구글 소셜 로그인")
     @PostMapping("/google/login")
-    public ResponseEntity<?> googleLogin(HttpServletRequest request) {
-        String token = Optional.of(request.getHeader("Google")).orElseThrow(
-                () -> new Exception400(UserExceptionStatus.GOOGLE_TOKEN_MISSING));
+    public ResponseEntity<ApiResult<LoginResponseDto>> googleLogin(
+            @NotBlank
+            @RequestHeader(value = "Google")
+            String token
+    ) {
         GoogleUserInfo userInfo = googleService.getGoogleUserInfo(token);
         LoginResponseDto resultDto = userService.socialLogin(userInfo);
         return ResponseEntity.ok(ApiUtils.success(resultDto));
