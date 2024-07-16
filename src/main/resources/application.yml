@@ -22,6 +22,8 @@ spring:
 
   application:
       name: "mandi"
+  profiles:
+    active: local
 
 #  security:
 #    oauth2:
