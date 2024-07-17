@@ -41,7 +41,6 @@ public class UserService {
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
         User user = userJpaRepository.findByEmail(userInfo.email()).orElseGet(
                 () -> {
-
                     return userJpaRepository.save(User.builder()
                             .email(userInfo.email())
                             .password(passwordEncoder.encode(UUID.randomUUID().toString()))
