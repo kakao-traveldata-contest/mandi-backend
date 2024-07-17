@@ -30,7 +30,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/dev")
-@Profile("local")
+//@Profile("local")
 public class DevSocialLoginController {
 
     @Value("${oauth2.google.client_id}")
