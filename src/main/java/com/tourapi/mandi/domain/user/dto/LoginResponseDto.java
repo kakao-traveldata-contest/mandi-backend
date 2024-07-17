@@ -8,16 +8,9 @@ public record LoginResponseDto(
         @Schema(description = "엑세스 토큰")
         String accessToken,
         @Schema(description = "리프레시 토큰")
-        String refreshToken
+        String refreshToken,
+        @Schema(description = "회원가입 유무")
+        boolean isSignUp
 ) {
-    @Builder
-    public LoginResponseDto {
-    }
 
-    public static LoginResponseDto of(String accessToken, String refreshToken) {
-        return LoginResponseDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
 }
