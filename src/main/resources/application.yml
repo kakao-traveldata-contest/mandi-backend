@@ -29,6 +29,8 @@ spring:
 
   application:
       name: "mandi"
+  profiles:
+    active: local
 
 
 
