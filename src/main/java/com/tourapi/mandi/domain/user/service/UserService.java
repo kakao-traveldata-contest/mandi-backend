@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -39,22 +40,34 @@ public class UserService {
 
 
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
-        User user = userJpaRepository.findByEmail(userInfo.email()).orElseGet(
-                () -> {
-                    return userJpaRepository.save(User.builder()
-                            .email(userInfo.email())
-                            .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                            .role(Role.ROLE_USER)
-                            .provider(userInfo.provider())
-                            .build());
-                });
+        Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
+        //유저정보 있을경우 => 이미 가입한 유저
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
 
-        String accessToken = JwtProvider.create(user);
-        String refreshToken = JwtProvider.createRefreshToken(user);
+            String accessToken = JwtProvider.create(user);
+            String refreshToken = JwtProvider.createRefreshToken(user);
 
-        tokenService.save(refreshToken, accessToken, user);
+            tokenService.save(refreshToken, accessToken, user);
+            return new LoginResponseDto(refreshToken,accessToken,true);
 
-        return LoginResponseDto.of(accessToken, refreshToken);
+        }
+        //유저정보 없을경우 => 처음 가입하는 유저
+        else {
+
+
+//            User newUser = User.builder()
+//                    .email(userInfo.email())
+//                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+//                    .role(Role.ROLE_USER)
+//                    .provider(userInfo.provider())
+//                    .build();
+//            userJpaRepository.save(newUser);
+
+            // B 로직 (user 정보가 존재하지 않는 경우)
+        }
+
+        return new LoginResponseDto(null,null,false);
     }
 
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
