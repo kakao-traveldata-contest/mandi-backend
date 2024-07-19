@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
 import com.tourapi.mandi.domain.user.dto.ReissueDto;
+import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
@@ -26,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -39,23 +41,47 @@ public class UserService {
 
 
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
-        User user = userJpaRepository.findByEmail(userInfo.email()).orElseGet(
-                () -> {
-                    return userJpaRepository.save(User.builder()
-                            .email(userInfo.email())
-                            .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                            .role(Role.ROLE_USER)
-                            .provider(userInfo.provider())
-                            .build());
-                });
+        Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
+        //유저정보 있을경우 => 이미 가입한 유저
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
 
-        String accessToken = JwtProvider.create(user);
-        String refreshToken = JwtProvider.createRefreshToken(user);
+            String accessToken = JwtProvider.create(user);
+            String refreshToken = JwtProvider.createRefreshToken(user);
 
-        tokenService.save(refreshToken, accessToken, user);
+            tokenService.save(refreshToken, accessToken, user);
+            return new LoginResponseDto(refreshToken,accessToken,true);
 
-        return LoginResponseDto.of(accessToken, refreshToken);
+        }
+        //유저정보 없을경우 => 처음 가입하는 유저
+        return new LoginResponseDto(null,null,false);
     }
+
+
+    public LoginResponseDto socialSignup(OauthUserInfo userInfo, SignupRequestDto signupRequestDto) {
+        //유저 정보만들고
+            User user = User.builder()
+                    .email(userInfo.email())
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .role(Role.ROLE_USER)
+                    .provider(userInfo.provider())
+                    .nickname(signupRequestDto.nickname())
+                    .description(signupRequestDto.description())
+                    .build();
+            userJpaRepository.save(user);
+        //토큰 만들어서 리턴
+            String accessToken = JwtProvider.create(user);
+            String refreshToken = JwtProvider.createRefreshToken(user);
+            tokenService.save(refreshToken, accessToken, user);
+
+            return new LoginResponseDto(refreshToken,accessToken,true);
+
+        }
+
+
+
+
+
 
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
         String refreshToken = requestDto.refreshToken();
