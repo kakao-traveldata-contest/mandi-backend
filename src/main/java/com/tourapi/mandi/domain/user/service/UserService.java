@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
 import com.tourapi.mandi.domain.user.dto.ReissueDto;
+import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
@@ -53,22 +54,34 @@ public class UserService {
 
         }
         //유저정보 없을경우 => 처음 가입하는 유저
-        else {
-
-
-//            User newUser = User.builder()
-//                    .email(userInfo.email())
-//                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-//                    .role(Role.ROLE_USER)
-//                    .provider(userInfo.provider())
-//                    .build();
-//            userJpaRepository.save(newUser);
-
-            // B 로직 (user 정보가 존재하지 않는 경우)
-        }
-
         return new LoginResponseDto(null,null,false);
     }
+
+
+    public LoginResponseDto socialSignup(OauthUserInfo userInfo, SignupRequestDto signupRequestDto) {
+        //유저 정보만들고
+            User user = User.builder()
+                    .email(userInfo.email())
+                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
+                    .role(Role.ROLE_USER)
+                    .provider(userInfo.provider())
+                    .nickname(signupRequestDto.nickname())
+                    .description(signupRequestDto.description())
+                    .build();
+            userJpaRepository.save(user);
+        //토큰 만들어서 리턴
+            String accessToken = JwtProvider.create(user);
+            String refreshToken = JwtProvider.createRefreshToken(user);
+            tokenService.save(refreshToken, accessToken, user);
+
+            return new LoginResponseDto(refreshToken,accessToken,true);
+
+        }
+
+
+
+
+
 
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
         String refreshToken = requestDto.refreshToken();
