@@ -1,6 +1,7 @@
 package com.tourapi.mandi.domain.user.controller;
 
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
+import com.tourapi.mandi.domain.user.dto.NicknameValidationRequestDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.GoogleUserInfo;
 import com.tourapi.mandi.domain.user.service.GoogleService;
@@ -53,5 +54,13 @@ public class LoginController {
         GoogleUserInfo userInfo = googleService.getGoogleUserInfo(token);
         LoginResponseDto resultDto = userService.socialSignup(userInfo,requestDto);
         return ResponseEntity.ok(ApiUtils.success(resultDto));
+    }
+
+    @Operation(summary = "중복 닉네임 검증")
+    @PostMapping("/check-nickname")
+    public ResponseEntity<ApiResult<Boolean>> checkNicknameDuplication(
+            @RequestBody @Valid NicknameValidationRequestDto requestDto
+    ) {
+        return ResponseEntity.ok(ApiUtils.success(userService.checkNicknameDuplication(requestDto)));
     }
 }
