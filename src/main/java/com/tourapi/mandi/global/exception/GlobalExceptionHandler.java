@@ -60,8 +60,13 @@ public class GlobalExceptionHandler {
     }
 
 
-
-    @ExceptionHandler({Exception400.class, Exception401.class, Exception403.class, Exception404.class})
+    @ExceptionHandler({
+            Exception400.class,
+            Exception401.class,
+            Exception403.class,
+            Exception404.class,
+            Exception409.class
+    })
     public ResponseEntity<?> clientException(ClientException exception) {
         return new ResponseEntity<>(exception.body(), exception.status());
     }
