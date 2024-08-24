@@ -1,17 +1,23 @@
 package com.tourapi.mandi.global.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.tourapi.mandi.global.exception.Exception400;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.convert.ReadingConverter;
 import org.springframework.stereotype.Component;
-
-import java.io.InputStream;
+import java.net.URL;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.UUID;
 
 
 @Component
 @RequiredArgsConstructor
-public class S3Client {
+public class S3ImageClient {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -22,7 +28,7 @@ public class S3Client {
         try {
             byte[] byteImage = java.util.Base64.getDecoder().decode(base64Data);
 
-            InputStream imageInputStream = getValidImageInputStream(byteImage);
+            ByteArrayInputStream imageInputStream = getValidImageInputStream(byteImage);
 
             // AWS S3 저장 로직
             String fileName = "image/" + UUID.randomUUID().toString();
@@ -42,13 +48,6 @@ public class S3Client {
         }
     }
 
-    public String base64ImageToS3(String base64Data, String bookmarkLink) {
-        if (base64Data == null) {
-            return jsoupUtils.getImgUrl(bookmarkLink);
-        }
-
-        return base64ImageToS3(base64Data);
-    }
 
     private ByteArrayInputStream getValidImageInputStream(byte[] byteImage) {
 
