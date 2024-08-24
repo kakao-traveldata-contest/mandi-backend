@@ -40,7 +40,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserJpaRepository userJpaRepository;
     private final TokenService tokenService;
-
+    private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
 
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
         Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
@@ -69,6 +69,7 @@ public class UserService {
                     .provider(userInfo.provider())
                     .nickname(signupRequestDto.nickname())
                     .description(signupRequestDto.description())
+                    .imgUrl(defaultImageUrl)
                     .build();
             userJpaRepository.save(user);
         //토큰 만들어서 리턴
