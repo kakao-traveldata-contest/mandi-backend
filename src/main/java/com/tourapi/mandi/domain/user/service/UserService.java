@@ -41,7 +41,6 @@ public class UserService {
     private final UserJpaRepository userJpaRepository;
     private final TokenService tokenService;
 
-
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
         Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
         //유저정보 있을경우 => 이미 가입한 유저
@@ -59,7 +58,6 @@ public class UserService {
         return new LoginResponseDto(null,null,false);
     }
 
-
     public LoginResponseDto socialSignup(OauthUserInfo userInfo, SignupRequestDto signupRequestDto) {
         //유저 정보만들고
             User user = User.builder()
@@ -76,8 +74,7 @@ public class UserService {
             String refreshToken = JwtProvider.createRefreshToken(user);
             tokenService.save(refreshToken, accessToken, user);
 
-            return new LoginResponseDto(refreshToken,accessToken,true);
-
+            return new LoginResponseDto(accessToken, refreshToken, true);
         }
 
     public boolean checkNicknameDuplication(NicknameValidationRequestDto requestDto) {
