@@ -51,8 +51,8 @@ public class UserService {
             String accessToken = JwtProvider.create(user);
             String refreshToken = JwtProvider.createRefreshToken(user);
 
-            tokenService.save(refreshToken, accessToken, user);
-            return new LoginResponseDto(refreshToken,accessToken,true);
+            tokenService.save(accessToken, refreshToken, user);
+            return new LoginResponseDto(accessToken,refreshToken,true);
 
         }
         //유저정보 없을경우 => 처음 가입하는 유저
@@ -74,9 +74,9 @@ public class UserService {
         //토큰 만들어서 리턴
             String accessToken = JwtProvider.create(user);
             String refreshToken = JwtProvider.createRefreshToken(user);
-            tokenService.save(refreshToken, accessToken, user);
+            tokenService.save(accessToken, refreshToken, user);
 
-            return new LoginResponseDto(refreshToken,accessToken,true);
+            return new LoginResponseDto(accessToken,refreshToken,true);
 
         }
 
