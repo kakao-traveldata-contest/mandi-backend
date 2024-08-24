@@ -4,11 +4,8 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
-
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
-import com.tourapi.mandi.domain.user.dto.NicknameValidationRequestDto;
 import com.tourapi.mandi.domain.user.dto.ReissueDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
@@ -17,14 +14,11 @@ import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
 import com.tourapi.mandi.global.exception.Exception400;
 import com.tourapi.mandi.global.exception.Exception404;
-import com.tourapi.mandi.global.exception.Exception409;
 import com.tourapi.mandi.global.redis.RedisExceptionStatus;
 import com.tourapi.mandi.global.redis.service.TokenService;
 import com.tourapi.mandi.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,15 +71,6 @@ public class UserService {
             return new LoginResponseDto(accessToken, refreshToken, true);
         }
 
-    public boolean checkNicknameDuplication(NicknameValidationRequestDto requestDto) {
-        // 중복된 닉네임인 경우 409 상태코드를 반환한다.
-        // * 409 (conflict): 대상 리소스가 현재 상태와 충돌하여 요청을 완료할 수 없음을 나타내는 코드
-        if (userJpaRepository.existsByNickname(requestDto.nickname())) {
-            throw new Exception409(UserExceptionStatus.NICKNAME_ALREADY_EXISTS);
-        }
-        return true;
-    }
-
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
         String refreshToken = requestDto.refreshToken();
 
@@ -116,19 +101,19 @@ public class UserService {
         tokenService.deleteByAccessToken(accessToken);
     }
 
-    private void checkRefreshTokenInRedis(String refreshToken) {
+    public void checkRefreshTokenInRedis(String refreshToken) {
         if (!tokenService.existsById(refreshToken)) {
             throw new Exception404(RedisExceptionStatus.REFRESH_TOKEN_NOT_FOUND);
         }
     }
 
-    private User getUserByRefreshToken(String refreshToken) {
+    public User getUserByRefreshToken(String refreshToken) {
         try {
             DecodedJWT decodedJwt = JwtProvider.verifyRefreshToken(refreshToken);
-            String email = decodedJwt.getClaim("email").asString();
             Long id = decodedJwt.getClaim("id").asLong();
-            Role role = decodedJwt.getClaim("role").as(Role.class);
-            return User.builder().userId(id).email(email).role(role).build();
+
+            return userJpaRepository.findById(id)
+                    .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
         } catch (SignatureVerificationException | JWTDecodeException e) {
             log.error(e.getMessage());
             throw new Exception400(UserExceptionStatus.REFRESH_TOKEN_INVALID);
