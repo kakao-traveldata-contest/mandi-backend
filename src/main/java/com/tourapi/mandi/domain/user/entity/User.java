@@ -60,6 +60,14 @@ public class User extends AuditingEntity {
 
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     //userId가 같으면 같은 객체라고 판별되도록 equals, hashCode 오버라이드
     @Override
     public boolean equals(Object obj) {
