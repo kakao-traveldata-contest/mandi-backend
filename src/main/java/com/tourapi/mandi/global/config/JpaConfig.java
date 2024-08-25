@@ -1,5 +1,6 @@
 package com.tourapi.mandi.global.config;
 
+
 import com.tourapi.mandi.global.security.CustomUserDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

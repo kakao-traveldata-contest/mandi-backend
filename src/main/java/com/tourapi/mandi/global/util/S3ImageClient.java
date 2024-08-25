@@ -26,12 +26,12 @@ public class S3ImageClient {
 
     public String base64ImageToS3(String base64Data) {
         try {
-            byte[] byteImage = java.util.Base64.getDecoder().decode(base64Data);
 
+            byte[] byteImage = java.util.Base64.getDecoder().decode(base64Data);
             ByteArrayInputStream imageInputStream = getValidImageInputStream(byteImage);
 
             // AWS S3 저장 로직
-            String fileName = "image/" + UUID.randomUUID().toString();
+            String fileName = "image/" + UUID.randomUUID();
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType("image/png");
             metadata.setContentLength(byteImage.length);
@@ -40,10 +40,10 @@ public class S3ImageClient {
             amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, imageInputStream, metadata));
             return amazonS3Client.getUrl(bucket, fileName).toString();
         } catch (IllegalArgumentException e) {
-            //base64로 인코딩된 이미지파일이 아닐경우, 이미지Url인지 확인
-            if (isValidImageUrl(base64Data)) {
-                return base64Data;
-            }
+//            //base64로 인코딩된 이미지파일이 아닐경우, 이미지Url인지 확인
+//            if (isValidImageUrl(base64Data)) {
+//                return base64Data;
+//            }
             throw new Exception400(UtilExceptionStatus.NOT_BASE64_DATA);
         }
     }
@@ -52,7 +52,6 @@ public class S3ImageClient {
     private ByteArrayInputStream getValidImageInputStream(byte[] byteImage) {
 
         ByteArrayInputStream imageInputStream = new ByteArrayInputStream(byteImage);
-
         try {
             BufferedImage image = ImageIO.read(imageInputStream);
 
@@ -68,21 +67,21 @@ public class S3ImageClient {
         return imageInputStream;
     }
 
-    private Boolean isValidImageUrl(String imgUrlString) {
-
-        try {
-            URL imgUrl = new URL(imgUrlString);
-            BufferedImage image = ImageIO.read(imgUrl);
-
-            // image인지 체크하는 로직
-            if (image == null) {
-                throw new Exception400(UtilExceptionStatus.IMAGE_URL_INVALID);
-            }
-        } catch (IOException exception) {
-            throw new Exception400(UtilExceptionStatus.IMAGE_UNREADABLE_URL);
-        }
-
-        return true;
-    }
+//    private Boolean isValidImageUrl(String imgUrlString) {
+//
+//        try {
+//            URL imgUrl = new URL(imgUrlString);
+//            BufferedImage image = ImageIO.read(imgUrl);
+//
+//            // image인지 체크하는 로직
+//            if (image == null) {
+//                throw new Exception400(UtilExceptionStatus.IMAGE_URL_INVALID);
+//            }
+//        } catch (IOException exception) {
+//            throw new Exception400(UtilExceptionStatus.IMAGE_UNREADABLE_URL);
+//        }
+//
+//        return true;
+//    }
 
 }

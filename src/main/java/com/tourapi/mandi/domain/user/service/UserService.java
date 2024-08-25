@@ -7,10 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
-import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
-import com.tourapi.mandi.domain.user.dto.NicknameValidationRequestDto;
-import com.tourapi.mandi.domain.user.dto.ReissueDto;
-import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
+import com.tourapi.mandi.domain.user.dto.*;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
@@ -21,6 +18,7 @@ import com.tourapi.mandi.global.exception.Exception409;
 import com.tourapi.mandi.global.redis.RedisExceptionStatus;
 import com.tourapi.mandi.global.redis.service.TokenService;
 import com.tourapi.mandi.global.security.JwtProvider;
+import com.tourapi.mandi.global.util.S3ImageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +39,7 @@ public class UserService {
     private final UserJpaRepository userJpaRepository;
     private final TokenService tokenService;
     private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
-
+    private final S3ImageClient s3ImageClient;
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
         Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
         //유저정보 있을경우 => 이미 가입한 유저
@@ -81,6 +79,7 @@ public class UserService {
 
         }
 
+        @Transactional(readOnly = true)
     public boolean checkNicknameDuplication(NicknameValidationRequestDto requestDto) {
         // 중복된 닉네임인 경우 409 상태코드를 반환한다.
         // * 409 (conflict): 대상 리소스가 현재 상태와 충돌하여 요청을 완료할 수 없음을 나타내는 코드
@@ -88,6 +87,27 @@ public class UserService {
             throw new Exception409(UserExceptionStatus.NICKNAME_ALREADY_EXISTS);
         }
         return true;
+    }
+
+
+    public String changeProfileImage(ProfileImageChangeRequestDto requestDto,User user) {
+        // 이미지 업로드 후 URL을 반환받음
+        String profileImageUrl = s3ImageClient.base64ImageToS3(requestDto.Base64EncodedImage());
+
+        // 유저 정보를 이메일로 조회
+        Optional<User> userOptional = userJpaRepository.findByEmail(user.getEmail());
+        System.out.println(user.getEmail().toString());
+        // 유저 정보가 존재하면 imgUrl 업데이트
+        if (userOptional.isPresent()) {
+            User existingUser = userOptional.get();
+            existingUser.setImgUrl(profileImageUrl); // imgUrl 업데이트
+            userJpaRepository.save(existingUser); // 변경사항 저장
+        } else {
+            throw new Exception404(UserExceptionStatus.USER_NOT_FOUND); // 유저가 없으면 예외 처리
+        }
+
+        return profileImageUrl;
+
     }
 
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
