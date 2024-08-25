@@ -1,5 +1,6 @@
 package com.tourapi.mandi.global.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tourapi.mandi.global.exception.Exception401;
 import com.tourapi.mandi.global.exception.Exception403;
 import com.tourapi.mandi.global.redis.service.BlackListTokenService;
@@ -18,24 +19,26 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final BlackListTokenService blackListTokenService;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    // AuthenticationManager 빈을 명시적으로 등록합니다.
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -70,7 +73,12 @@ public class SecurityConfig {
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint((request, response, authException) -> FilterResponseUtils.unAuthorized(response, new Exception401(SecurityExceptionStatus.UNAUTHORIZED))));
 
         // 권한 실패 처리
-        http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler((request, response, authException) -> FilterResponseUtils.forbidden(response, new Exception403(SecurityExceptionStatus.FORBIDDEN))));
+//        http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler((request, response, authException) -> FilterResponseUtils.forbidden(response, new Exception403(SecurityExceptionStatus.FORBIDDEN))));
+
+        http.exceptionHandling((exceptionHandling) -> exceptionHandling
+                .accessDeniedHandler(new Http403Handler(objectMapper))
+                .authenticationEntryPoint(new Http401Handler(objectMapper))
+        );
 
         // 인증, 권한 필터 설정
         http.authorizeHttpRequests(authorize -> authorize

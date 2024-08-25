@@ -1,6 +1,7 @@
 package com.tourapi.mandi.global.security;
 
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tourapi.mandi.global.exception.Exception403;
@@ -24,7 +25,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (JWTVerificationException | JWTCreationException | Exception403 e) {
+        }
+        catch (JWTVerificationException  | JWTCreationException | Exception403 e) {
             setForbiddenResponse(request, response, e);
         }
     }

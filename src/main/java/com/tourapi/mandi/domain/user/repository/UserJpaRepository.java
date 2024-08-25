@@ -18,4 +18,6 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
      * @return 닉네임 존재 여부
      */
     boolean existsByNickname(String nickname);
+
+
 }

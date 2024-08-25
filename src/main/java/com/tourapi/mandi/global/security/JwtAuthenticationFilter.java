@@ -5,14 +5,19 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.global.redis.service.BlackListTokenService;
+import com.tourapi.mandi.global.util.ApiUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,7 +47,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         if (!jwt.startsWith("Bearer")) {
-            log.error("잘못된 토큰");
+            log.error("잘못된 토큰입니당");
             throw new JWTDecodeException("토큰 형식이 잘못되었습니다.");
         }
 
@@ -55,6 +60,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String role = decodedJwt.getClaim("role").asString();
             User user = User.builder().userId(id).role(Role.valueOf(role)).build();
             CustomUserDetails myUserDetails = new CustomUserDetails(user);
+            System.out.println("커스텀유저디테일 비번"+myUserDetails.getPassword());
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(
                             myUserDetails,
@@ -65,15 +71,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             log.debug("디버그 : 인증 객체 만들어짐");
         } catch (SignatureVerificationException sve) {
             log.error("토큰 검증 실패");
-            throw new JWTVerificationException("토큰 검증에 실패했습니다.");
         } catch (TokenExpiredException tee) {
             log.error("토큰 만료됨");
         } catch (JWTDecodeException jde) {
-            log.error("잘못된 토큰");
+            log.error("잘못된 토큰22");
             throw new JWTDecodeException("토큰 형식이 잘못되었습니다.");
-        } finally {
-            chain.doFilter(request, response);
         }
+        chain.doFilter(request, response);
     }
 
 }

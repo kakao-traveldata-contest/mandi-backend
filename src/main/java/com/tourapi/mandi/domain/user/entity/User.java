@@ -35,9 +35,11 @@ public class User extends AuditingEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Setter
     @Column(length = 10, nullable = false, name = "nickname", unique = true)
     private String nickname;
 
+    @Setter
     @Column(length = 40, name = "description")
     private String description;
 
