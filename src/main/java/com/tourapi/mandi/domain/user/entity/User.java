@@ -4,10 +4,7 @@ import com.tourapi.mandi.domain.user.entity.constant.Provider;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -44,6 +41,7 @@ public class User extends AuditingEntity {
     @Column(length = 40, name = "description")
     private String description;
 
+    @Setter
     @Column(length = 512, name = "img_url")
     private String imgUrl;
 
