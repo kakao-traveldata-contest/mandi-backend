@@ -31,9 +31,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+
+
     private final PasswordEncoder passwordEncoder;
     private final UserJpaRepository userJpaRepository;
     private final TokenService tokenService;
+    private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
+
 
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
         Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
@@ -44,8 +48,8 @@ public class UserService {
             String accessToken = JwtProvider.create(user);
             String refreshToken = JwtProvider.createRefreshToken(user);
 
-            tokenService.save(refreshToken, accessToken, user);
-            return new LoginResponseDto(refreshToken,accessToken,true);
+            tokenService.save(accessToken, refreshToken, user);
+            return new LoginResponseDto(accessToken,refreshToken,true);
 
         }
         //유저정보 없을경우 => 처음 가입하는 유저
@@ -61,14 +65,17 @@ public class UserService {
                     .provider(userInfo.provider())
                     .nickname(signupRequestDto.nickname())
                     .description(signupRequestDto.description())
+                    .imgUrl(defaultImageUrl)
                     .build();
             userJpaRepository.save(user);
         //토큰 만들어서 리턴
             String accessToken = JwtProvider.create(user);
             String refreshToken = JwtProvider.createRefreshToken(user);
-            tokenService.save(refreshToken, accessToken, user);
+            tokenService.save(accessToken, refreshToken, user);
 
-            return new LoginResponseDto(accessToken, refreshToken, true);
+
+            return new LoginResponseDto(accessToken,refreshToken,true);
+
         }
 
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
@@ -107,13 +114,13 @@ public class UserService {
         }
     }
 
-    public User getUserByRefreshToken(String refreshToken) {
+    private User getUserByRefreshToken(String refreshToken) {
         try {
             DecodedJWT decodedJwt = JwtProvider.verifyRefreshToken(refreshToken);
+            String email = decodedJwt.getClaim("email").asString();
             Long id = decodedJwt.getClaim("id").asLong();
-
-            return userJpaRepository.findById(id)
-                    .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+            Role role = decodedJwt.getClaim("role").as(Role.class);
+            return User.builder().userId(id).email(email).role(role).build();
         } catch (SignatureVerificationException | JWTDecodeException e) {
             log.error(e.getMessage());
             throw new Exception400(UserExceptionStatus.REFRESH_TOKEN_INVALID);

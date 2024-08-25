@@ -4,10 +4,7 @@ import com.tourapi.mandi.domain.user.entity.constant.Provider;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -38,12 +35,15 @@ public class User extends AuditingEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Setter
     @Column(length = 10, nullable = false, name = "nickname", unique = true)
     private String nickname;
 
+    @Setter
     @Column(length = 40, name = "description")
     private String description;
 
+    @Setter
     @Column(length = 512, name = "img_url")
     private String imgUrl;
 
@@ -58,14 +58,6 @@ public class User extends AuditingEntity {
         this.description = description;
         this.imgUrl=imgUrl;
 
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     //userId가 같으면 같은 객체라고 판별되도록 equals, hashCode 오버라이드

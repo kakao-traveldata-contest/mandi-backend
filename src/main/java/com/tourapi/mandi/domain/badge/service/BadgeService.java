@@ -10,9 +10,11 @@ import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
 import com.tourapi.mandi.global.exception.Exception404;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class BadgeService {
     private final UserJpaRepository userJpaRepository;
     private final BadgeRepository badgeRepository;
     private final UserBadgeRepository userBadgeRepository;
-
+    @Transactional(readOnly=true)
     public BadgeListResponseDto getUserBadges(Long userId) {
         User user = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));

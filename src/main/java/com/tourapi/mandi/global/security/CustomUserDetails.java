@@ -11,11 +11,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-@Getter
-public class CustomUserDetails implements UserDetails {
 
-    private final User user;
+public record CustomUserDetails(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

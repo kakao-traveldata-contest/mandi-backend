@@ -1,6 +1,7 @@
 package com.tourapi.mandi.domain.user.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -9,6 +10,7 @@ public record NicknameValidationRequestDto(
         @Schema(description = "닉네임")
         @Size(min = 2, max = 10, message = "닉네임은 2~10자 사이여야 합니다.")
         @Pattern(regexp = "^[a-zA-Z0-9가-힣]*$", message = "닉네임은 영문, 숫자, 한글만 사용 가능합니다.")
+        @NotBlank(message = "nickname필드값이 없습니다.")
         String nickname
 ) {
 }
