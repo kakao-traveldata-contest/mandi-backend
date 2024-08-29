@@ -31,9 +31,11 @@ public class OpenAPIConfig {
 
     private SecurityScheme jwtSecurityScheme() {
         return new SecurityScheme()
-                .type(SecurityScheme.Type.APIKEY)
+                .type(SecurityScheme.Type.HTTP)
                 .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
+                .name("Authorization")
+                .scheme("Bearer")
+                .bearerFormat("JWT");
     }
 
     private SecurityRequirement bearerTokenRequirement() {
