@@ -7,6 +7,8 @@ import com.tourapi.mandi.domain.user.service.ProfileService;
 import com.tourapi.mandi.global.security.CustomUserDetails;
 import com.tourapi.mandi.global.util.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,10 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @Operation(summary = "중복 닉네임 검증")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "중복되지 않은 닉네임"),
+            @ApiResponse(responseCode = "409", description = "중복된 닉네임 입력시")
+    })
     @PostMapping("/check-nickname")
     public ResponseEntity<ApiUtils.ApiResult<Boolean>> checkNicknameDuplication(
             @RequestBody @Valid NicknameValidationRequestDto requestDto
@@ -36,6 +42,11 @@ public class ProfileController {
     }
 
     @Operation(summary = "프로필 정보 변경(닉네임, 한줄소개)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 변경 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않은 사용자 정보 인증시"),
+            @ApiResponse(responseCode = "409", description = "중복된 닉네임 입력시")
+    })
     @PatchMapping("/info")
     public ResponseEntity<ApiUtils.ApiResult<Boolean>> updateProfile(
             @RequestBody @Valid ProfileUpdateRequestDto requestDto,
@@ -45,6 +56,11 @@ public class ProfileController {
     }
 
     @Operation(summary = "프로필 사진 변경")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 사진 변경 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않은 사용자 정보 인증시"),
+            @ApiResponse(responseCode = "400", description = "base64 형식으로 인코딩되지 프로필 사진 요청시")
+    })
     @PatchMapping("/img")
     public ResponseEntity<ApiUtils.ApiResult<String>> changeProfileImage(
             @RequestBody @Valid ProfileImageChangeRequestDto requestDto,
