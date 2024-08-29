@@ -14,17 +14,17 @@ public class ApiUtils {
 
     @Schema(description = "정상 처리 시 응답 DTO")
     public record ApiResult<T>(
-            boolean success,
-            T response,
-            ApiError error
+            @Schema(description = "응답 성공 여부") boolean success,
+            @Schema(description = "응답 본문") T response,
+            @Schema(description = "에러 발생시 상세 기재", nullable = true) ApiError error
     ) {
     }
 
     @Schema(description = "에러 발생 시 응답 DTO")
     public record ApiError(
-            String message,
-            int status,
-            String errorCode
+            @Schema(description = "오류 메시지") String message,
+            @Schema(description = "HTTP 상태 코드") int status,
+            @Schema(description = "애러 코드") String errorCode
     ) {
     }
 }
