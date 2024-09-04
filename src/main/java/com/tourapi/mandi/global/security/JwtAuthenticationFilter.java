@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         if (!jwt.startsWith("Bearer")) {
-            log.error("잘못된 토큰입니당");
+            log.error("잘못된 토큰입니다");
             throw new JWTDecodeException("토큰 형식이 잘못되었습니다.");
         }
 
@@ -60,7 +60,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             String role = decodedJwt.getClaim("role").asString();
             User user = User.builder().userId(id).role(Role.valueOf(role)).build();
             CustomUserDetails myUserDetails = new CustomUserDetails(user);
-            System.out.println("커스텀유저디테일 비번"+myUserDetails.getPassword());
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(
                             myUserDetails,
@@ -74,7 +73,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         } catch (TokenExpiredException tee) {
             log.error("토큰 만료됨");
         } catch (JWTDecodeException jde) {
-            log.error("잘못된 토큰22");
+            log.error("잘못된 토큰입니다");
             throw new JWTDecodeException("토큰 형식이 잘못되었습니다.");
         }
         chain.doFilter(request, response);
