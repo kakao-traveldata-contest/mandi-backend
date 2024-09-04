@@ -1,10 +1,7 @@
 package com.tourapi.mandi.domain.user.service;
 
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
-import com.tourapi.mandi.domain.user.dto.NicknameValidationRequestDto;
-import com.tourapi.mandi.domain.user.dto.ProfileImageChangeRequestDto;
-import com.tourapi.mandi.domain.user.dto.ProfileUpdateRequestDto;
-import com.tourapi.mandi.domain.user.dto.UserProfileDto;
+import com.tourapi.mandi.domain.user.dto.*;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
 import com.tourapi.mandi.global.exception.Exception404;
@@ -36,7 +33,6 @@ public class ProfileService {
         return true;
     }
 
-    @Transactional
     public boolean updateProfile(ProfileUpdateRequestDto requestDto, User user) {
         User existingUser = userJpaRepository.findById(user.getUserId())
                 .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
@@ -68,5 +64,31 @@ public class ProfileService {
 
 
         return profileImageUrl;
+    }
+
+
+
+
+    public ProfileInfoResponseDto getProfileInfo(User user) {
+
+        // 유저 정보를 이메일로 조회
+        User existingUser = userJpaRepository.findById(user.getUserId())
+                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+
+        //유저 정보를 이용해서 원하는 DTO 반환
+        ProfileInfoResponseDto responseDto= new ProfileInfoResponseDto(
+                existingUser.getNickname(),
+                existingUser.getImgUrl(),
+                existingUser.getDescription(),
+                0,
+                0,
+                existingUser.getEmail(),
+                existingUser.getProvider()
+        );
+
+
+
+
+        return responseDto;
     }
 }

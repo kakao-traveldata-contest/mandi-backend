@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.user.controller;
 
 import com.tourapi.mandi.domain.user.dto.NicknameValidationRequestDto;
 import com.tourapi.mandi.domain.user.dto.ProfileImageChangeRequestDto;
+import com.tourapi.mandi.domain.user.dto.ProfileInfoResponseDto;
 import com.tourapi.mandi.domain.user.dto.ProfileUpdateRequestDto;
 import com.tourapi.mandi.domain.user.service.ProfileService;
 import com.tourapi.mandi.global.security.CustomUserDetails;
@@ -15,11 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "프로필 API 목록")
 @RestController
@@ -67,5 +64,20 @@ public class ProfileController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseEntity.ok(ApiUtils.success(profileService.changeProfileImage(requestDto, userDetails.user())));
+    }
+
+
+
+
+    @Operation(summary = "프로필 정보 요청")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "프로필 정보 요청 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않은 사용자 정보 인증시"),
+    })
+    @GetMapping("/info")
+    public ResponseEntity<ApiUtils.ApiResult<ProfileInfoResponseDto>> changeProfileImage(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiUtils.success(profileService.getProfileInfo(userDetails.user())));
     }
 }
