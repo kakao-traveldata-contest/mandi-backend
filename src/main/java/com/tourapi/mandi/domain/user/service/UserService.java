@@ -99,6 +99,8 @@ public class UserService {
     }
 
     public void withdrawal(User user, String accessToken) {
+
+
         userJpaRepository.findById(user.getUserId()).ifPresentOrElse(
                 userJpaRepository::delete,
                 () -> {

@@ -1,10 +1,13 @@
 package com.tourapi.mandi.domain.user.controller;
 
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
+import com.tourapi.mandi.domain.user.dto.ReissueDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.GoogleUserInfo;
 import com.tourapi.mandi.domain.user.service.GoogleService;
 import com.tourapi.mandi.domain.user.service.UserService;
+import com.tourapi.mandi.global.security.CustomUserDetails;
+import com.tourapi.mandi.global.security.JwtProvider;
 import com.tourapi.mandi.global.util.ApiUtils;
 import com.tourapi.mandi.global.util.ApiUtils.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,10 +16,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,6 +67,52 @@ public class LoginController {
     ) {
         GoogleUserInfo userInfo = googleService.getGoogleUserInfo(token);
         LoginResponseDto resultDto = userService.socialSignup(userInfo,requestDto);
+        return ResponseEntity.ok(ApiUtils.success(resultDto));
+    }
+
+
+
+
+    @Operation(summary = "로그아웃 ")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "404", description = "해당 토큰 값이 Redis에 존재하지 않을시"),
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResult<?>> logout(HttpServletRequest request)
+    {
+        System.out.println(request.getHeader(JwtProvider.HEADER));
+        userService.logout(request.getHeader(JwtProvider.HEADER));
+        return ResponseEntity.ok(ApiUtils.success(null));
+    }
+
+
+    @Operation(summary = "회원탈퇴 ")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원탈퇴 성공"),
+            @ApiResponse(responseCode = "404", description = "해당하는 정보의 유저가 없을시"),
+            @ApiResponse(responseCode = "404", description = "해당 토큰 값이 Redis에 존재하지 않을시")
+    })
+    @PostMapping("/withdrawal")
+    public ResponseEntity<ApiResult<LoginResponseDto>> withdrawal(
+            HttpServletRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        userService.withdrawal(userDetails.user(), request.getHeader(JwtProvider.HEADER));
+        return ResponseEntity.ok(ApiUtils.success(null));
+    }
+
+
+    @Operation(summary = "토큰 재발급")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+            @ApiResponse(responseCode = "404", description = "해당 토큰 값이 Redis에 존재하지 않을시"),
+    })
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResult<?>> reissue(
+            @RequestBody @Valid ReissueDto.ReissueRequestDto requestDto)
+    {
+        ReissueDto.ReissueResponseDto resultDto = userService.reissue(requestDto);
         return ResponseEntity.ok(ApiUtils.success(resultDto));
     }
 }

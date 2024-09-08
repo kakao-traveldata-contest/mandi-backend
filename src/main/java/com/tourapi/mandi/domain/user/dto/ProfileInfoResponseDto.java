@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-@Schema(description = "프로필 변경 요청 DTO")
+@Schema(description = "프로필 변경 응답 DTO")
 public record ProfileInfoResponseDto(
         @Schema(description = "닉네임", nullable = true)
         String nickname,
