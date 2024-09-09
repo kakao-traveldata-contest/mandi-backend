@@ -6,6 +6,8 @@ import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.GoogleUserInfo;
 import com.tourapi.mandi.domain.user.service.GoogleService;
 import com.tourapi.mandi.domain.user.service.UserService;
+import com.tourapi.mandi.global.redis.entity.Token;
+import com.tourapi.mandi.global.redis.repository.TokenRepository;
 import com.tourapi.mandi.global.security.CustomUserDetails;
 import com.tourapi.mandi.global.security.JwtProvider;
 import com.tourapi.mandi.global.util.ApiUtils;
@@ -34,11 +36,13 @@ public class LoginController {
 
     private final GoogleService googleService;
     private final UserService userService;
+    //테스트용
+    private final TokenRepository tokenRepository;
 
     @Operation(summary = "구글 소셜 로그인")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "400", description = "유효하지 않은 access token 입력시"),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 google token 입력시"),
             @ApiResponse(responseCode = "500", description = "Google API 연동 중 문제 발생시"),
     })
     @PostMapping("/google/login")
@@ -56,6 +60,7 @@ public class LoginController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
             @ApiResponse(responseCode = "400", description = "1. 유효하지 않은 access token 입력시\n2. 유효하지 않은 닉네임/한줄소개 입력시"),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 google token 입력시"),
             @ApiResponse(responseCode = "500", description = "Google API 연동 중 문제 발생시"),
     })
     @PostMapping("/google/signup")
@@ -81,7 +86,6 @@ public class LoginController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResult<?>> logout(HttpServletRequest request)
     {
-        System.out.println(request.getHeader(JwtProvider.HEADER));
         userService.logout(request.getHeader(JwtProvider.HEADER));
         return ResponseEntity.ok(ApiUtils.success(null));
     }
@@ -114,6 +118,21 @@ public class LoginController {
     {
         ReissueDto.ReissueResponseDto resultDto = userService.reissue(requestDto);
         return ResponseEntity.ok(ApiUtils.success(resultDto));
+    }
+
+
+    @GetMapping("/test")
+    public ResponseEntity<ApiResult<?>> test()
+    {
+        Token token = Token.builder()
+                .refreshToken("sample_refresh_token")
+                .accessToken("sample_access_token")
+                .userId(999999L)
+                .email("example@example.com")
+                .build();
+
+        tokenRepository.save(token);
+        return ResponseEntity.ok(ApiUtils.success(null));
     }
 }
 

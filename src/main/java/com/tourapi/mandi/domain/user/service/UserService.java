@@ -15,6 +15,7 @@ import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
 import com.tourapi.mandi.global.exception.Exception400;
 import com.tourapi.mandi.global.exception.Exception404;
 import com.tourapi.mandi.global.redis.RedisExceptionStatus;
+import com.tourapi.mandi.global.redis.service.BlackListTokenService;
 import com.tourapi.mandi.global.redis.service.TokenService;
 import com.tourapi.mandi.global.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserJpaRepository userJpaRepository;
     private final TokenService tokenService;
+    private final BlackListTokenService blackListTokenService;
     private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
 
 
@@ -45,11 +47,11 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            String accessToken = JwtProvider.create(user);
             String refreshToken = JwtProvider.createRefreshToken(user);
+            String accessToken = JwtProvider.create(user);
 
-            tokenService.save(accessToken, refreshToken, user);
-            return new LoginResponseDto(accessToken,refreshToken,true);
+            tokenService.save(refreshToken, accessToken, user);
+            return new LoginResponseDto(refreshToken,accessToken,true);
 
         }
         //유저정보 없을경우 => 처음 가입하는 유저
@@ -69,12 +71,13 @@ public class UserService {
                     .build();
             userJpaRepository.save(user);
         //토큰 만들어서 리턴
-            String accessToken = JwtProvider.create(user);
-            String refreshToken = JwtProvider.createRefreshToken(user);
-            tokenService.save(accessToken, refreshToken, user);
+        String refreshToken = JwtProvider.createRefreshToken(user);
+        String accessToken = JwtProvider.create(user);
+
+            tokenService.save(refreshToken, accessToken, user);
 
 
-            return new LoginResponseDto(accessToken,refreshToken,true);
+            return new LoginResponseDto(refreshToken,accessToken,true);
 
         }
 
@@ -96,6 +99,7 @@ public class UserService {
 
     public void logout(String accessToken) {
         tokenService.deleteByAccessToken(accessToken);
+        blackListTokenService.save(accessToken);
     }
 
     public void withdrawal(User user, String accessToken) {
@@ -108,6 +112,7 @@ public class UserService {
                 }
         );
         tokenService.deleteByAccessToken(accessToken);
+        blackListTokenService.save(accessToken);
     }
 
     public void checkRefreshTokenInRedis(String refreshToken) {

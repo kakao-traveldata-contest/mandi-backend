@@ -28,7 +28,6 @@ public class TokenService {
     public void deleteByAccessToken(String accessToken) {
         Token token = tokenRepository.findByAccessToken(accessToken).orElseThrow(
                 () -> new Exception404(RedisExceptionStatus.REFRESH_TOKEN_NOT_FOUND));
-
         tokenRepository.deleteById(token.getRefreshToken());
     }
 
