@@ -24,3 +24,12 @@ VALUES(1, 1, now(), now());
 
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
 VALUES(1, 2, now(), now());
+
+INSERT INTO course_tb(course_id, name, distance, created_at, last_modified_at)
+VALUES (1, 'Sinseondae', 3.2, now(), now()),
+       (2, 'Galmaet-gil', 2.7, now(), now());
+
+-- INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, is_reviewed, review_content, review_score,
+--                                 reviewed_at, created_at, last_modified_at)
+-- VALUES (1, 2, 1, 1, 'good', 5, now(), now(), now()),
+--        (2, 2, 2, 0, null, null, null, now(), now());
