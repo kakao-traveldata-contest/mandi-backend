@@ -2,9 +2,12 @@ package com.tourapi.mandi.domain.course.service;
 
 import com.tourapi.mandi.domain.course.dto.CompletedCourseDto;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
+import com.tourapi.mandi.domain.course.dto.ReviewDto;
+import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
 import com.tourapi.mandi.domain.course.repository.CompletedCourseRepository;
 import com.tourapi.mandi.domain.course.util.CompletedCourseMapper;
+import com.tourapi.mandi.domain.course.util.ReviewMapper;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.service.UserService;
 import java.math.BigDecimal;
@@ -40,6 +43,29 @@ public class CompletedCourseService  {
                 .totalCount(completedCourses.size())
                 .totalDistance(totalDistance)
                 .completedCourses(completedCourseDtos)
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewListResponseDto getReviews(User user) {
+        User existingUser = userService.getExistingUser(user);
+
+        List<CompletedCourse> completedCourses = completedCourseRepository.findByUser(existingUser);
+
+        List<ReviewDto> reviewedCourses = new ArrayList<>();
+        List<CompletedCourseDto> notReviewedCourses = new ArrayList<>();
+
+        for (final CompletedCourse completedCourse : completedCourses) {
+            if (completedCourse.getIsReviewed().equals(Boolean.TRUE)) {
+                reviewedCourses.add(ReviewMapper.toReviewDto(completedCourse));
+            } else notReviewedCourses.add(CompletedCourseMapper.toCompletedCourseDto(completedCourse));
+        }
+
+        return ReviewListResponseDto.builder()
+                .totalCompletedCourseCount(completedCourses.size())
+                .totalReviewCount(reviewedCourses.size())
+                .reviewedCourses(reviewedCourses)
+                .notReviewedCourses(notReviewedCourses)
                 .build();
     }
 }

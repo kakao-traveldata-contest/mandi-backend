@@ -1,6 +1,7 @@
 package com.tourapi.mandi.domain.course.controller;
 
 import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
+import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
 import com.tourapi.mandi.domain.course.service.CompletedCourseService;
 import com.tourapi.mandi.global.security.CustomUserDetails;
 import com.tourapi.mandi.global.util.ApiUtils;
@@ -32,6 +33,18 @@ public class CourseController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         CompletedCourseListResponseDto responseDto = completedCourseService.getCompletedCourses(userDetails.user());
+
+        return ResponseEntity.ok(ApiUtils.success(responseDto));
+    }
+
+    @Operation(summary = "완주 코스 후기 목록 조회")
+    @ApiResponse(responseCode = "200", description = "완주 코스 후기 목록 조회 성공")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
+    @GetMapping("/completed/reviews")
+    public ResponseEntity<ApiResult<ReviewListResponseDto>> getReviews(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        ReviewListResponseDto responseDto = completedCourseService.getReviews(userDetails.user());
 
         return ResponseEntity.ok(ApiUtils.success(responseDto));
     }
