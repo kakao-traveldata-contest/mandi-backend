@@ -36,7 +36,6 @@ public class BadgeController {
             @Parameter(description = "사용자 ID", required = true)
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        BadgeListResponseDto resultDto = badgeService.getUserBadges(userDetails.user());
-        return ResponseEntity.ok(ApiUtils.success(resultDto));
+        return ResponseEntity.ok(ApiUtils.success(badgeService.getUserBadges(userDetails.user())));
     }
 }
