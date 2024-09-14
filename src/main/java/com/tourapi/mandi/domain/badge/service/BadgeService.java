@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-;
+
 
 @Service
 @RequiredArgsConstructor
@@ -30,10 +30,10 @@ public class BadgeService {
     private final BadgeRepository badgeRepository;
     private final UserBadgeRepository userBadgeRepository;
     @Transactional(readOnly=true)
-    public BadgeListResponseDto getUserBadges(Long userId) {
-        User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
-
+    public BadgeListResponseDto getUserBadges(User user) {
+        if (!userJpaRepository.existsById(user.getUserId())) {
+            throw new Exception404(UserExceptionStatus.USER_NOT_FOUND);
+        }
         List<Badge> allBadges = badgeRepository.findAll();
         List<Badge> userBadges = userBadgeRepository.findAllByUser(user);
         List<BadgeResponseDto> badges = new ArrayList<>();
