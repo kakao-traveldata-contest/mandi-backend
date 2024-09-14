@@ -36,8 +36,6 @@ public class LoginController {
 
     private final GoogleService googleService;
     private final UserService userService;
-    //테스트용
-    private final TokenRepository tokenRepository;
 
     @Operation(summary = "구글 소셜 로그인")
     @ApiResponses({
@@ -121,19 +119,7 @@ public class LoginController {
     }
 
 
-    @GetMapping("/test")
-    public ResponseEntity<ApiResult<?>> test()
-    {
-        Token token = Token.builder()
-                .refreshToken("sample_refresh_token")
-                .accessToken("sample_access_token")
-                .userId(999999L)
-                .email("example@example.com")
-                .build();
 
-        tokenRepository.save(token);
-        return ResponseEntity.ok(ApiUtils.success(null));
-    }
 }
 
 

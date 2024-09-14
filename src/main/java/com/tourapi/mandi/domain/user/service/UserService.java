@@ -40,11 +40,13 @@ public class UserService {
     private final BlackListTokenService blackListTokenService;
     private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
 
-
+//해당 메서드가 호출된다는거 자체가, refreshtoken까지 만료되었거나, 아예 기존  토큰들이 프론트의 로컬스토리지에서 다지워서 새로 받아야 하거나,
+    //따라서 이메서드에서가 호출되면 => 기존 redis에있는 키들을 지우고, 아예 새로만들어줘야한다.
     public LoginResponseDto socialLogin(OauthUserInfo userInfo) {
         Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
         //유저정보 있을경우 => 이미 가입한 유저
         if (userOptional.isPresent()) {
+
             User user = userOptional.get();
 
             String refreshToken = JwtProvider.createRefreshToken(user);
