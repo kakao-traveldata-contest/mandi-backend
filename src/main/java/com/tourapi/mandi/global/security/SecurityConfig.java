@@ -73,7 +73,7 @@ public class SecurityConfig {
         http.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint((request, response, authException) -> FilterResponseUtils.unAuthorized(response, new Exception401(SecurityExceptionStatus.UNAUTHORIZED))));
 
         // 권한 실패 처리
-//        http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler((request, response, authException) -> FilterResponseUtils.forbidden(response, new Exception403(SecurityExceptionStatus.FORBIDDEN))));
+        http.exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler((request, response, authException) -> FilterResponseUtils.forbidden(response, new Exception403(SecurityExceptionStatus.FORBIDDEN))));
 
         http.exceptionHandling((exceptionHandling) -> exceptionHandling
                 .accessDeniedHandler(new Http403Handler(objectMapper))

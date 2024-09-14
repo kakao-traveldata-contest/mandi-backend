@@ -72,6 +72,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             log.error("토큰 검증 실패");
         } catch (TokenExpiredException tee) {
             log.error("토큰 만료됨");
+            throw new TokenExpiredException("토큰이 만료되었습니다.",tee.getExpiredOn());
         } catch (JWTDecodeException jde) {
             log.error("잘못된 토큰입니다");
             throw new JWTDecodeException("토큰 형식이 잘못되었습니다.");
