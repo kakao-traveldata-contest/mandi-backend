@@ -1,18 +1,17 @@
 package com.tourapi.mandi.domain.user.service;
 
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
-import com.tourapi.mandi.domain.user.dto.*;
+import com.tourapi.mandi.domain.user.dto.ProfileImageChangeRequestDto;
+import com.tourapi.mandi.domain.user.dto.ProfileInfoResponseDto;
+import com.tourapi.mandi.domain.user.dto.ProfileUpdateRequestDto;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
-import com.tourapi.mandi.global.exception.Exception404;
 import com.tourapi.mandi.global.exception.Exception409;
 import com.tourapi.mandi.global.util.S3ImageClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,8 +33,7 @@ public class ProfileService {
     }
 
     public boolean updateProfile(ProfileUpdateRequestDto requestDto, User user) {
-        User existingUser = userJpaRepository.findById(user.getUserId())
-                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+        User existingUser = userService.getExistingUser(user);
 
         if (!requestDto.nickname().equals(existingUser.getNickname())) {
             checkNicknameDuplication(requestDto.nickname());
@@ -55,8 +53,7 @@ public class ProfileService {
         String profileImageUrl = s3ImageClient.base64ImageToS3(requestDto.Base64EncodedImage());
 
         // 유저 정보를 이메일로 조회
-        User existingUser = userJpaRepository.findById(user.getUserId())
-                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+        User existingUser = userService.getExistingUser(user);
 
         // 유저 정보가 존재하면 imgUrl 업데이트
         existingUser.setImgUrl(profileImageUrl); // imgUrl 업데이트
@@ -66,17 +63,13 @@ public class ProfileService {
         return profileImageUrl;
     }
 
-
-
-
     public ProfileInfoResponseDto getProfileInfo(User user) {
 
         // 유저 정보를 이메일로 조회
-        User existingUser = userJpaRepository.findById(user.getUserId())
-                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+        User existingUser = userService.getExistingUser(user);
 
         //유저 정보를 이용해서 원하는 DTO 반환
-        ProfileInfoResponseDto responseDto= new ProfileInfoResponseDto(
+        return new ProfileInfoResponseDto(
                 existingUser.getNickname(),
                 existingUser.getImgUrl(),
                 existingUser.getDescription(),
@@ -85,10 +78,5 @@ public class ProfileService {
                 existingUser.getEmail(),
                 existingUser.getProvider()
         );
-
-
-
-
-        return responseDto;
     }
 }

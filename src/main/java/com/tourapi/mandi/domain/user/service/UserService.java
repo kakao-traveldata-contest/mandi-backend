@@ -18,14 +18,13 @@ import com.tourapi.mandi.global.redis.RedisExceptionStatus;
 import com.tourapi.mandi.global.redis.service.BlackListTokenService;
 import com.tourapi.mandi.global.redis.service.TokenService;
 import com.tourapi.mandi.global.security.JwtProvider;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Transactional
@@ -121,6 +120,11 @@ public class UserService {
         if (!tokenService.existsById(refreshToken)) {
             throw new Exception404(RedisExceptionStatus.REFRESH_TOKEN_NOT_FOUND);
         }
+    }
+
+    public User getExistingUser(User user) {
+        return userJpaRepository.findById(user.getUserId())
+                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
     }
 
     private User getUserByRefreshToken(String refreshToken) {

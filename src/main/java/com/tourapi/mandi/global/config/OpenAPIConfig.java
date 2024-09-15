@@ -66,4 +66,12 @@ public class OpenAPIConfig {
                 .pathsToMatch("/badges/**")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi courseOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("코스 API")
+                .pathsToMatch("/courses/**")
+                .build();
+    }
 }
