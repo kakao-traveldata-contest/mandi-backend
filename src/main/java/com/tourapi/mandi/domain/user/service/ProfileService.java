@@ -54,7 +54,6 @@ public class ProfileService {
 
         // 기존 이미지 URL이 존재하면 삭제
         if (existingUser.getImgUrl() != null && !existingUser.getImgUrl().isEmpty()) {
-            System.out.println("삭제해라애송이");
             s3ImageClient.deleteImageFromS3(existingUser.getImgUrl());
         }
 
