@@ -1,4 +1,0 @@
-package com.tourapi.mandi.domain.post.entity;
-
-public class PostImg {
-}

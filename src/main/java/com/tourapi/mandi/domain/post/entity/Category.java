@@ -1,4 +1,7 @@
 package com.tourapi.mandi.domain.post.entity;
 
-public class Category {
+public enum Category {
+    TOURISM, TREKKING, DINING,
+    ACCOMMODATION,OTHER
+
 }

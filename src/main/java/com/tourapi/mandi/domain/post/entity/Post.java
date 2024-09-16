@@ -1,5 +1,6 @@
 package com.tourapi.mandi.domain.post.entity;
 
+import com.tourapi.mandi.domain.comment.entity.Comment;
 import com.tourapi.mandi.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,8 +10,6 @@ import java.util.List;
 @Table(name = "post_tb")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Post {
 
     @Id
@@ -22,9 +21,9 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "category", nullable = false)
-//    private Category category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private Category category;
 
     @Lob
     @Column(name = "content")
