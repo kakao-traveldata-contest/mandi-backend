@@ -12,5 +12,5 @@ import java.util.List;
 public interface UserBadgeRepository extends JpaRepository<UserBadge, Long> {
 
     @Query("select ub.badge from UserBadge ub where ub.user = :user")
-    List<Badge> findAllByUser(@Param("user") User user);
+    List<Badge> findBadgesByUser(@Param("user") User user);
 }
