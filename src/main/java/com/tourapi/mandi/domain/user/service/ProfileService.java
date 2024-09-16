@@ -49,17 +49,22 @@ public class ProfileService {
 
     public String changeProfileImage(ProfileImageChangeRequestDto requestDto, User user) {
 
-        // 이미지 업로드 후 URL을 반환받음
-        String profileImageUrl = s3ImageClient.base64ImageToS3(requestDto.Base64EncodedImage());
-
-        // 유저 정보를 이메일로 조회
+        // 유저 정보를 이메일로 조회 (혹은 다른 방식으로 조회)
         User existingUser = userService.getExistingUser(user);
 
-        // 유저 정보가 존재하면 imgUrl 업데이트
+        // 기존 이미지 URL이 존재하면 삭제
+        if (existingUser.getImgUrl() != null && !existingUser.getImgUrl().isEmpty()) {
+            System.out.println("삭제해라애송이");
+            s3ImageClient.deleteImageFromS3(existingUser.getImgUrl());
+        }
+
+        // 새로운 이미지 업로드 후 URL을 반환받음
+        String profileImageUrl = s3ImageClient.base64ImageToS3(requestDto.Base64EncodedImage());
+
+        // 유저 정보 업데이트
         existingUser.setImgUrl(profileImageUrl); // imgUrl 업데이트
 
-
-
+        // 변경된 이미지 URL 반환
         return profileImageUrl;
     }
 

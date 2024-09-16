@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.tourapi.mandi.global.exception.Exception400;
+import com.tourapi.mandi.global.exception.Exception500;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -66,6 +67,28 @@ public class S3ImageClient {
         }
         return imageInputStream;
     }
+
+
+    public void deleteImageFromS3(String imageUrl) {
+        try {
+
+            // 이미지 URL에서 파일명 추출
+            String fileName = imageUrl.substring(imageUrl.indexOf("image/"));
+
+            System.out.println(fileName);
+
+            //이미지가 디폴트이미지라면 아무것도 안함
+            if (fileName.equals("image/default.png")){
+                return;
+            }
+
+            // S3에서 파일 삭제
+            amazonS3Client.deleteObject(bucket, fileName);
+        } catch (Exception e) {
+            throw new Exception500(UtilExceptionStatus.S3_IMAGE_DELETE_FAILED);
+        }
+    }
+
 
 //    private Boolean isValidImageUrl(String imgUrlString) {
 //
