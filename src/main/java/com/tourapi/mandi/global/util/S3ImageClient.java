@@ -75,8 +75,6 @@ public class S3ImageClient {
             // 이미지 URL에서 파일명 추출
             String fileName = imageUrl.substring(imageUrl.indexOf("image/"));
 
-            System.out.println(fileName);
-
             //이미지가 디폴트이미지라면 아무것도 안함
             if (fileName.equals("image/default.png")){
                 return;
