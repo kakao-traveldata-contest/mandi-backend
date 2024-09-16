@@ -52,20 +52,20 @@ public class CompletedCourseService  {
 
         List<CompletedCourse> completedCourses = completedCourseRepository.findByUser(existingUser);
 
-        List<ReviewDto> reviewedCourses = new ArrayList<>();
-        List<CompletedCourseDto> notReviewedCourses = new ArrayList<>();
+        List<ReviewDto> reviewedDtos = new ArrayList<>();
+        List<CompletedCourseDto> completedCourseDtos = new ArrayList<>();
 
         for (final CompletedCourse completedCourse : completedCourses) {
             if (completedCourse.getIsReviewed().equals(Boolean.TRUE)) {
-                reviewedCourses.add(ReviewMapper.toReviewDto(completedCourse));
-            } else notReviewedCourses.add(CompletedCourseMapper.toCompletedCourseDto(completedCourse));
+                reviewedDtos.add(ReviewMapper.toReviewDto(completedCourse));
+            } else completedCourseDtos.add(CompletedCourseMapper.toCompletedCourseDto(completedCourse));
         }
 
         return ReviewListResponseDto.builder()
                 .totalCompletedCourseCount(completedCourses.size())
-                .totalReviewCount(reviewedCourses.size())
-                .reviewedCourses(reviewedCourses)
-                .notReviewedCourses(notReviewedCourses)
+                .totalReviewCount(reviewedDtos.size())
+                .reviewedCourses(reviewedDtos)
+                .notReviewedCourses(completedCourseDtos)
                 .build();
     }
 }

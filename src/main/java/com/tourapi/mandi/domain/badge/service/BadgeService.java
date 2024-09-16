@@ -35,12 +35,12 @@ public class BadgeService {
             throw new Exception404(UserExceptionStatus.USER_NOT_FOUND);
         }
         List<Badge> allBadges = badgeRepository.findAll();
-        List<Badge> userBadges = userBadgeRepository.findAllByUser(user);
-        List<BadgeResponseDto> badges = new ArrayList<>();
+        List<Badge> userBadges = userBadgeRepository.findBadgesByUser(user);
+        List<BadgeResponseDto> badgeResponseDtos = new ArrayList<>();
 
         for (final Badge badge : allBadges) {
-            badges.add(BadgeMapper.toBadgeResponseDto(badge, userBadges.contains(badge)));
+            badgeResponseDtos.add(BadgeMapper.toBadgeResponseDto(badge, userBadges.contains(badge)));
         }
-        return new BadgeListResponseDto(allBadges.size(), userBadges.size(), badges);
+        return new BadgeListResponseDto(allBadges.size(), userBadges.size(), badgeResponseDtos);
     }
 }
