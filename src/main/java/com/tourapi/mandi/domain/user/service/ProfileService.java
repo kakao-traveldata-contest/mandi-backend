@@ -6,6 +6,7 @@ import com.tourapi.mandi.domain.user.dto.ProfileInfoResponseDto;
 import com.tourapi.mandi.domain.user.dto.ProfileUpdateRequestDto;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
+import com.tourapi.mandi.domain.user.util.ProfileInfoMapper;
 import com.tourapi.mandi.global.exception.Exception409;
 import com.tourapi.mandi.global.util.S3ImageClient;
 import lombok.RequiredArgsConstructor;
@@ -73,14 +74,7 @@ public class ProfileService {
         User existingUser = userService.getExistingUser(user);
 
         //유저 정보를 이용해서 원하는 DTO 반환
-        return new ProfileInfoResponseDto(
-                existingUser.getNickname(),
-                existingUser.getImgUrl(),
-                existingUser.getDescription(),
-                0,
-                0,
-                existingUser.getEmail(),
-                existingUser.getProvider()
-        );
+        return ProfileInfoMapper.toProfileInfoResponseDto(existingUser);
+
     }
 }

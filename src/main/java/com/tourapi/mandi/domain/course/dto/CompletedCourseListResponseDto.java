@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Builder;
 
 
+@Builder
 public record CompletedCourseListResponseDto(
         @Schema(description = "완주한 코스 총 개수")
         Integer totalCount,

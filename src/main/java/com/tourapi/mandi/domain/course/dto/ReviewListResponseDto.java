@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;
 
-
+@Builder
 public record ReviewListResponseDto(
         @Schema(description = "완주 코스 총 개수")
         Integer totalCompletedCourseCount,

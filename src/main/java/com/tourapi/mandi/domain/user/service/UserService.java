@@ -95,7 +95,7 @@ public class UserService {
         String newRefreshToken = JwtProvider.createRefreshToken(user);
         tokenService.deleteById(refreshToken);
         tokenService.save(newRefreshToken, newAccessToken, user);
-        return ReissueDto.ReissueResponseDto.of(newAccessToken, newRefreshToken);
+        return new ReissueDto.ReissueResponseDto(newAccessToken, newRefreshToken);
     }
 
     public void logout(String accessToken) {

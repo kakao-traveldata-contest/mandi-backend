@@ -12,9 +12,5 @@ public class ReissueDto {
     public record ReissueResponseDto(
             String accessToken,
             String refreshToken
-    ) {
-        public static ReissueResponseDto of(String accessToken, String refreshToken) {
-            return new ReissueResponseDto(accessToken, refreshToken);
-        }
-    }
+    ) {}
 }

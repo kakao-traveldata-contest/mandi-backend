@@ -40,6 +40,6 @@ public class BadgeService {
         for (final Badge badge : allBadges) {
             badgeResponseDtos.add(BadgeMapper.toBadgeResponseDto(badge, userBadges.contains(badge)));
         }
-        return new BadgeListResponseDto(allBadges.size(), userBadges.size(), badgeResponseDtos);
+        return BadgeMapper.toBadgeListResponseDto(badgeResponseDtos, allBadges.size(), userBadges.size());
     }
 }
