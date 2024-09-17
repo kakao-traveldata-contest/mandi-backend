@@ -13,4 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 카테고리별로 최신 게시글을 페이지로 가져오는 메서드
     @Query("select p from Post p join fetch p.user where p.category = :category")
     Page<Post> findByCategoryOrderByCreatedAtDesc(@Param("category") Category category, Pageable pageable);
+
+    // 모든 게시글을 최신순으로 페이지로 가져오는 메서드
+    @Query("select p from Post p join fetch p.user")
+    Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

@@ -13,7 +13,7 @@ public record PageInfoDto(
         this(
                 page.getTotalElements(),
                 page.getSize(),
-                page.getPageable().getPageNumber(),
+                page.getPageable().getPageNumber() +1,
                 page.getTotalPages()
         );
     }
