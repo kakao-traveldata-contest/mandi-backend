@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.post.controller;
 
 import com.tourapi.mandi.domain.badge.dto.BadgeListResponseDto;
 import com.tourapi.mandi.domain.badge.service.BadgeService;
+import com.tourapi.mandi.domain.post.dto.CreatePostRequestDto;
 import com.tourapi.mandi.domain.post.dto.PostDto;
 import com.tourapi.mandi.domain.post.dto.PostsByCategoryResponseDto;
 import com.tourapi.mandi.domain.post.entity.Category;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +54,25 @@ public class PostController {
         Page<PostDto> postPage = postService.getPostsByCategory(category, page-1, size);
 
         return PostMapper.toPostsByCategoryResponseDto(postPage);
+    }
+
+
+    @Operation(summary = "게시글 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 생성 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
+    })
+    @PostMapping("/create")
+    public PostDto createPost(
+            @RequestBody @Valid CreatePostRequestDto createPostRequestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+
+        // 게시글 생성 로직 실행
+        PostDto createdPost = postService.createPost(userDetails.user(), createPostRequestDto);
+
+        // 생성된 게시글의 정보 반환
+        return createdPost;
     }
 
 }

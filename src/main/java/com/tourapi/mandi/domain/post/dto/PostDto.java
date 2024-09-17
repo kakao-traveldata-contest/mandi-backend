@@ -13,7 +13,7 @@ public record PostDto(
         Category category,
         String content,
         String title,
-        List<PostImageDto> listPostImg
+        List<PostImageDto> imgUrlList
 ) {
 
 }

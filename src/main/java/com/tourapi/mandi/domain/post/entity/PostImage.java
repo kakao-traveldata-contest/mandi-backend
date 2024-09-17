@@ -19,4 +19,10 @@ public class PostImage {
 
     @Column(name = "url", length = 512, nullable = false)
     private String url;  // 이미지 URL
+
+    @Builder
+    public PostImage(Post post, String url) {
+        this.post = post;
+        this.url = url;
+    }
 }

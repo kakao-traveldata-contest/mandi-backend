@@ -82,11 +82,6 @@ public class SecurityConfig {
 
         // 인증, 권한 필터 설정
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                        new AntPathRequestMatcher("/auth/google/login"),
-                        new AntPathRequestMatcher("/auth/google/signup"),
-                        new AntPathRequestMatcher("/auth/check-nickname"))
-                .permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/auth/change-profile"))
                 .authenticated()
                 .anyRequest().permitAll());
