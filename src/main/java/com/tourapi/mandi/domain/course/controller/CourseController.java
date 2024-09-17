@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/courses")
-@Validated
 public class CourseController {
     private final CompletedCourseService completedCourseService;
 

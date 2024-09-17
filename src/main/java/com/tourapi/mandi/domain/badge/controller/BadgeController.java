@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/badges")
-@Validated
 public class BadgeController {
 
     private final BadgeService badgeService;

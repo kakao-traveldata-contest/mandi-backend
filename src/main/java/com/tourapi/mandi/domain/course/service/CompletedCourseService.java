@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CompletedCourseService  {
     private final CompletedCourseRepository completedCourseRepository;
     private final UserService userService;
