@@ -45,6 +45,12 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	// AWS S3
 	implementation ("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+	// QueryDSL
+	implementation("com.querydsl:querydsl-core:5.0.0")
+	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
+	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 }
 
 tasks.withType<Test> {
