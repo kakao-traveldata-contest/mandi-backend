@@ -6,7 +6,7 @@ import static java.lang.Math.min;
 import com.tourapi.mandi.domain.course.entity.DifficultyLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import lombok.Builder;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.PageRequest;
@@ -30,8 +30,11 @@ public record CourseSearchDto(
         String orderByDirection,
 
         @Schema(description = "난이도 (1: Easy, 2: Moderate, 3: Hard)")
-        List<Integer> difficulties
+        List<Integer> levels
 ) {
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_SIZE = 10;
+    private static final String DEFAULT_ORDER = "ASC";
     private static final int MAX_SIZE = 100;
 
     @Builder
@@ -41,14 +44,14 @@ public record CourseSearchDto(
             Integer rating,
             String keyword,
             String orderByDirection,
-            List<Integer> difficulties
+            List<Integer> levels
     ) {
-        this.page = page == null ? 1 : max(1, page);
-        this.size = size == null ? 10 : max(1, size);
+        this.page = page == null ? DEFAULT_PAGE : max(1, page);
+        this.size = size == null ? DEFAULT_SIZE : max(1, size);
+        this.orderByDirection = orderByDirection == null ? DEFAULT_ORDER : orderByDirection;
         this.keyword = keyword;
-        this.orderByDirection = Objects.requireNonNullElse(orderByDirection, "ASC");
         this.rating = rating;
-        this.difficulties = difficulties;
+        this.levels = levels;
     }
 
     public long getOffset() {
@@ -59,7 +62,13 @@ public record CourseSearchDto(
         return PageRequest.of(page - 1, size);
     }
 
-    public List<DifficultyLevel> getDifficultyKeywords() {
-        return difficulties.stream().map(DifficultyLevel::of).toList();
+    public List<DifficultyLevel> difficulties() {
+        if (levels == null || levels.isEmpty()) {
+            return List.of();
+        }
+        return levels.stream()
+                .map(DifficultyLevel::get)
+                .flatMap(Optional::stream)
+                .toList();
     }
 }

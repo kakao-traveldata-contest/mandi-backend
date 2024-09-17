@@ -1,7 +1,5 @@
 package com.tourapi.mandi.domain.course.entity;
 
-import com.tourapi.mandi.domain.course.CourseExceptionStatus;
-import com.tourapi.mandi.global.exception.Exception400;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -13,20 +11,19 @@ public enum DifficultyLevel {
     Moderate(2),
     Hard(3);
 
-    private static final Map<Integer, DifficultyLevel> valueToLevel = Arrays.stream(values())
+    private static final Map<Integer, DifficultyLevel> numberToLevel = Arrays.stream(values())
             .collect(Collectors.toMap(
-                    level -> level.value,
+                    level -> level.number,
                     level -> level
             ));
 
-    private final int value;
+    private final int number;
 
-    DifficultyLevel(int value) {
-        this.value = value;
+    DifficultyLevel(int number) {
+        this.number = number;
     }
 
-    public static DifficultyLevel of(final Integer level) {
-        return Optional.ofNullable(valueToLevel.get(level))
-                .orElseThrow(() -> new Exception400(CourseExceptionStatus.DIFFICULTY_INVALID));
+    public static Optional<DifficultyLevel> get(Integer level) {
+        return Optional.ofNullable(numberToLevel.get(level));
     }
 }
