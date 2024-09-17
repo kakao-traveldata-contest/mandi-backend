@@ -1,6 +1,6 @@
 package com.tourapi.mandi.domain.course.dto;
 
-import com.tourapi.mandi.global.common.PageInfoDto;
+import com.tourapi.mandi.global.dto.PageInfoDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.Builder;

@@ -5,7 +5,7 @@ import static lombok.AccessLevel.PRIVATE;
 import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.entity.Course;
-import com.tourapi.mandi.global.common.PageInfoDto;
+import com.tourapi.mandi.global.dto.PageInfoDto;
 import java.util.List;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
