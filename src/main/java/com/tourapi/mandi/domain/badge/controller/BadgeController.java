@@ -29,7 +29,7 @@ public class BadgeController {
     @ApiResponse(responseCode = "200", description = "배지 목록 조회 성공")
     @ApiResponse(responseCode = "404", description = "존재하지 않은 사용자 ID 입력시")
     @GetMapping
-    public ResponseEntity<ApiUtils.ApiResult<BadgeListResponseDto>> googleLogin(
+    public ResponseEntity<ApiUtils.ApiResult<BadgeListResponseDto>> getBadges(
             @Parameter(description = "사용자 ID", required = true)
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
