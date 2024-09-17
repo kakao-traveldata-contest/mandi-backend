@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.post.entity;
 
 import com.tourapi.mandi.domain.comment.entity.Comment;
 import com.tourapi.mandi.domain.user.entity.User;
+import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @Table(name = "post_tb")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Post {
+public class Post  extends AuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +33,8 @@ public class Post {
     @Column(name = "title", length = 150, nullable = false)
     private String title;
 
-//    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<PostImg> listPostImg;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> listPostImg;
 
     @Column(name = "like_cnt", nullable = false)
     private int likeCnt;

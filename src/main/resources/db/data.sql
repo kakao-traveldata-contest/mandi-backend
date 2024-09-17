@@ -20,6 +20,11 @@ INSERT INTO user_tb(description, email, img_url, nickname, password, provider, r
 VALUES ( 'hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now());
 
 
+
+INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, created_at, last_modified_at)
+VALUES ( 'hello', 'jhy0285@gmail.com', '', '조영진존잘', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now());
+
+
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
 VALUES(1, 1, now(), now());
 
@@ -36,3 +41,30 @@ VALUES (1, 'Sinseondae', 3.2, now(), now()),
 --                                 reviewed_at, created_at, last_modified_at)
 -- VALUES (1, 2, 1, 1, 'good', 5, now(), now(), now()),
 --        (2, 2, 2, 0, null, null, null, now(), now());
+
+
+
+-- 카테고리: 'TOURISM', 'TREKKING', 'DINING', 'ACCOMMODATION', 'OTHER'
+
+-- User ID 1과 2 사용, 카테고리는 'TOURISM', 'DINING' 사용
+INSERT INTO post_tb (user_id, category, content, title, like_cnt, created_at, last_modified_at)
+VALUES
+    (1, 'TOURISM', 'This is a post about tourism.', 'Tourism Post', 10, now(), now()),
+    (2, 'DINING', 'This is a post about dining.', 'Dining Post', 5, now(), now()),
+    (1, 'TREKKING', 'Trekking experience post content.', 'Trekking Post', 15, now(), now()),
+    (2, 'ACCOMMODATION', 'Great accommodation tips.', 'Accommodation Post', 7, now(), now()),
+    (2, 'DINING', 'This is a post about ssssdining.', 'Dining Post', 15, now(), now()),
+    (1, 'OTHER', 'Random content.', 'Miscellaneous Post', 3, now(), now());
+
+
+-- PostImage 테이블에 이미지 데이터 추가
+-- post_id는 post_tb의 게시글 ID를 참조합니다.
+
+INSERT INTO post_image_tb (post_id, url)
+VALUES
+    (1, 'https://example.com/image1.jpg'),
+    (1, 'https://example.com/image2.jpg'),
+    (2, 'https://example.com/image3.jpg'),
+    (3, 'https://example.com/image4.jpg'),
+    (3, 'https://example.com/image5.jpg'),
+    (4, 'https://example.com/image6.jpg');
