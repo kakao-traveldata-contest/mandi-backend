@@ -38,11 +38,12 @@ public class CompletedCourseService  {
             totalDistance = totalDistance.add(completedCourse.getCourse().getDistance());
         }
 
-        return CompletedCourseListResponseDto.builder()
-                .totalCount(completedCourses.size())
-                .totalDistance(totalDistance)
-                .completedCourses(completedCourseDtos)
-                .build();
+       return new CompletedCourseListResponseDto(
+                completedCourses.size(),
+                totalDistance,
+                completedCourseDtos
+        );
+
     }
 
     @Transactional(readOnly = true)
@@ -60,11 +61,11 @@ public class CompletedCourseService  {
             } else completedCourseDtos.add(CompletedCourseMapper.toCompletedCourseDto(completedCourse));
         }
 
-        return ReviewListResponseDto.builder()
-                .totalCompletedCourseCount(completedCourses.size())
-                .totalReviewCount(reviewedDtos.size())
-                .reviewedCourses(reviewedDtos)
-                .notReviewedCourses(completedCourseDtos)
-                .build();
+       return new ReviewListResponseDto(
+                completedCourses.size(),
+                reviewedDtos.size(),
+                reviewedDtos,
+                completedCourseDtos
+        );
     }
 }

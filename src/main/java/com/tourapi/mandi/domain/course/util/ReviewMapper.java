@@ -5,9 +5,10 @@ import static lombok.AccessLevel.PRIVATE;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReviewMapper {
     public static ReviewDto toReviewDto(CompletedCourse completedCourse) {
         CompletedCourseDto completedCourseDto = CompletedCourseMapper.toCompletedCourseDto(completedCourse);
