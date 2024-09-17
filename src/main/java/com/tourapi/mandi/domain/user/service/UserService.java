@@ -12,6 +12,9 @@ import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
+
+import com.tourapi.mandi.domain.user.util.LoginMapper;
+import com.tourapi.mandi.domain.user.util.UserMapper;
 import com.tourapi.mandi.global.exception.Exception400;
 import com.tourapi.mandi.global.exception.Exception404;
 import com.tourapi.mandi.global.redis.RedisExceptionStatus;
@@ -45,42 +48,30 @@ public class UserService {
         Optional<User> userOptional = userJpaRepository.findByEmail(userInfo.email());
         //유저정보 있을경우 => 이미 가입한 유저
         if (userOptional.isPresent()) {
-
             User user = userOptional.get();
-
             String refreshToken = JwtProvider.createRefreshToken(user);
             String accessToken = JwtProvider.create(user);
 
             tokenService.save(refreshToken, accessToken, user);
-            return new LoginResponseDto(refreshToken,accessToken,true);
+            return LoginMapper.toLoginResponseDto(refreshToken,accessToken,true);
 
         }
         //유저정보 없을경우 => 처음 가입하는 유저
-        return new LoginResponseDto(null,null,false);
+        return LoginMapper.toLoginResponseDto(null,null,false);
     }
 
     public LoginResponseDto socialSignup(OauthUserInfo userInfo, SignupRequestDto signupRequestDto) {
         //유저 정보만들고
-            User user = User.builder()
-                    .email(userInfo.email())
-                    .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .role(Role.ROLE_USER)
-                    .provider(userInfo.provider())
-                    .nickname(signupRequestDto.nickname())
-                    .description(signupRequestDto.description())
-                    .imgUrl(defaultImageUrl)
-                    .build();
+            User user = UserMapper.toUserFromSignupRequestDto(signupRequestDto, defaultImageUrl, passwordEncoder, userInfo);
             userJpaRepository.save(user);
         //토큰 만들어서 리턴
         String refreshToken = JwtProvider.createRefreshToken(user);
         String accessToken = JwtProvider.create(user);
 
-            tokenService.save(refreshToken, accessToken, user);
+        tokenService.save(refreshToken, accessToken, user);
 
-
-            return new LoginResponseDto(refreshToken,accessToken,true);
-
-        }
+        return LoginMapper.toLoginResponseDto(refreshToken,accessToken,true);
+    }
 
     public ReissueDto.ReissueResponseDto reissue(ReissueDto.ReissueRequestDto requestDto) {
         String refreshToken = requestDto.refreshToken();
@@ -95,7 +86,8 @@ public class UserService {
         String newRefreshToken = JwtProvider.createRefreshToken(user);
         tokenService.deleteById(refreshToken);
         tokenService.save(newRefreshToken, newAccessToken, user);
-        return new ReissueDto.ReissueResponseDto(newAccessToken, newRefreshToken);
+        return LoginMapper.toReissueResponseDto(newAccessToken, newRefreshToken);
+
     }
 
     public void logout(String accessToken) {
@@ -130,10 +122,7 @@ public class UserService {
     private User getUserByRefreshToken(String refreshToken) {
         try {
             DecodedJWT decodedJwt = JwtProvider.verifyRefreshToken(refreshToken);
-            String email = decodedJwt.getClaim("email").asString();
-            Long id = decodedJwt.getClaim("id").asLong();
-            Role role = decodedJwt.getClaim("role").as(Role.class);
-            return User.builder().userId(id).email(email).role(role).build();
+            return UserMapper.toUserFromJwt(decodedJwt);
         } catch (SignatureVerificationException | JWTDecodeException e) {
             log.error(e.getMessage());
             throw new Exception400(UserExceptionStatus.REFRESH_TOKEN_INVALID);

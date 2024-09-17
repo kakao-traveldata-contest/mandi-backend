@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 public final class ProfileInfoMapper {
 
     public static ProfileInfoResponseDto toProfileInfoResponseDto(User existingUser) {
-        return new ProfileInfoResponseDto(
-                existingUser.getNickname(),
-                existingUser.getImgUrl(),
-                existingUser.getDescription(),
-                0,  // Placeholder for data, adjust as needed
-                0,  // Placeholder for data, adjust as needed
-                existingUser.getEmail(),
-                existingUser.getProvider()
-        );
+        return ProfileInfoResponseDto.builder()
+                .nickname(existingUser.getNickname())
+                .imgUrl(existingUser.getImgUrl())
+                .description(existingUser.getDescription())
+                .totalReviews(0)
+                .completedCourses(0)
+                .email(existingUser.getEmail())
+                .provider(existingUser.getProvider())
+                .build();
     }
 }
