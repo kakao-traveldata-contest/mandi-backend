@@ -2,11 +2,13 @@ package com.tourapi.mandi.domain.post.service;
 
 
 import com.tourapi.mandi.domain.post.dto.CreatePostRequestDto;
+import com.tourapi.mandi.domain.post.dto.DetailPostDto;
 import com.tourapi.mandi.domain.post.dto.PostDto;
 import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.domain.post.repository.PostRepository;
 import com.tourapi.mandi.domain.post.util.PostMapper;
+import com.tourapi.mandi.domain.user.PostExceptionStatus;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
@@ -30,6 +32,7 @@ public class PostService {
     private final UserJpaRepository userJpaRepository;
     private final S3ImageClient s3ImageClient;
 
+    @Transactional(readOnly = true)
     public Page<PostDto> getPostsByCategory(Category category, int page, int size) {
         // Pageable 객체 생성 (page와 size를 설정)
         Pageable pageable = PageRequest.of(page, size);
@@ -66,6 +69,19 @@ public class PostService {
 
         // CreatePostResponseDto 생성 및 반환
         return PostMapper.toPostDto(newPost);
+    }
+
+    @Transactional(readOnly = true)
+    public DetailPostDto getPostById(Long id) {
+
+
+        // Post 검증: 해당 id로 게시글 존재 여부 확인
+        Post existingPost = postRepository.findPostWithDetailsById(id).orElseThrow(
+                () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
+        );
+
+        // PostDto로 변환하여 반환
+        return PostMapper.toDetailPostDto(existingPost);
     }
 
 }

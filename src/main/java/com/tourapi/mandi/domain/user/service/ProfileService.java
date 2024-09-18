@@ -68,6 +68,7 @@ public class ProfileService {
         return profileImageUrl;
     }
 
+    @Transactional(readOnly = true)
     public ProfileInfoResponseDto getProfileInfo(User user) {
 
         // 유저 정보를 이메일로 조회

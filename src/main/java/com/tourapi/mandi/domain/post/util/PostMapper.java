@@ -1,5 +1,7 @@
 package com.tourapi.mandi.domain.post.util;
 
+import com.tourapi.mandi.domain.comment.dto.CommentDto;
+import com.tourapi.mandi.domain.comment.entity.Comment;
 import com.tourapi.mandi.domain.post.dto.*;
 import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
@@ -90,16 +92,41 @@ public final class PostMapper {
 
         return post;
     }
-//
-//    public static CreatePostResponseDto toCreatePostResponseDto(Post post,CreatePostRequestDto createPostRequestDto ) {
-//        return CreatePostResponseDto.builder()
-//                .postId(post.getPostId())  // 생성된 게시글의 ID
-//                .category(post.getCategory())  // 카테고리 정보
-//                .content(post.getContent())  // 게시글 내용
-//                .title(post.getTitle())  // 게시글 제목
-//                .imgUrlList(post.getPostImageList())  // S3에서 가져온 이미지 URL 리스트
-//                .build();
-//    }
+
+
+
+    public static DetailPostDto toDetailPostDto(Post post) {
+        return DetailPostDto.builder()
+                .postId(post.getPostId())
+                .user(toUserDto(post.getUser()))
+                .category(post.getCategory())
+                .content(post.getContent())
+                .title(post.getTitle())
+                .imgUrlList(post.getPostImageList().stream()
+                        .map(PostMapper::toPostImageDto)
+                        .toList())
+                // 부모 댓글만 포함하도록 필터링 (대댓글은 childComments 안에 있으므로 제외)
+                .commentList(post.getCommentList().stream()
+                        .filter(c -> c.getParentComment() == null)  // 부모 댓글만 포함
+                        .map(PostMapper::toCommentDto)
+                        .toList())
+                .build();
+    }
+
+    public static CommentDto toCommentDto(Comment comment) {
+        return CommentDto.builder()
+                .commentId(comment.getCommentId())  // 댓글 ID
+                .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null)
+                .content(comment.getContent())  // 댓글 내용
+                .likeCnt(comment.getLikeCnt())  // 좋아요 수
+                .childComments(comment.getChildComments().stream()
+                        .map(PostMapper::toCommentDto)
+                        .toList())  // 자식 댓글 리스트
+                .build();
+    }
+
+
+
 
 
 }

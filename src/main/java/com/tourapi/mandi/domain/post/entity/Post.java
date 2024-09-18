@@ -7,7 +7,10 @@ import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "post_tb")
@@ -43,11 +46,12 @@ public class Post  extends AuditingEntity {
     private int likeCnt;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> commentList;
+    private Set<Comment> commentList = new HashSet<>();
+
 
 
     @Builder
-    public Post(User user, Category category, String content, String title, List<PostImage> postImageList, int likeCnt,List<Comment> commentList) {
+    public Post(User user, Category category, String content, String title, List<PostImage> postImageList, int likeCnt,Set<Comment> commentList) {
         this.user = user;
         this.category = category;
         this.content = content;

@@ -1,12 +1,15 @@
 package com.tourapi.mandi.domain.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "comment_tb")
@@ -29,7 +32,8 @@ public class Comment extends AuditingEntity {
     private Comment parentComment;  // 상위 댓글 (대댓글의 경우)
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> childComments = new ArrayList<>();  // 대댓글 리스트
+    private Set<Comment> childComments = new HashSet<>();
+
 
     @Column(name = "content", length = 500, nullable = false)
     private String content;  // 댓글 본문
