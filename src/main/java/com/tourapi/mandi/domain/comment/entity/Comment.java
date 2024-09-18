@@ -1,6 +1,7 @@
 package com.tourapi.mandi.domain.comment.entity;
 
 import com.tourapi.mandi.domain.post.entity.Post;
+import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "comment_tb")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Comment {
+public class Comment extends AuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
