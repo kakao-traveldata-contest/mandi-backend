@@ -5,6 +5,8 @@ import com.tourapi.mandi.global.exception.Exception400;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
+
 
 @Schema(description = "프로필 변경 요청 DTO")
 public record ProfileUpdateRequestDto(

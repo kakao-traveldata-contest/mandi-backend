@@ -3,6 +3,7 @@ package com.tourapi.mandi.domain.user.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
+@Builder
 @Schema(description = "로그인 응답 DTO")
 public record LoginResponseDto(
         @Schema(description = "리프레시 토큰")

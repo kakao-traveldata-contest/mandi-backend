@@ -1,5 +1,6 @@
 package com.tourapi.mandi.global.dto;
 
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;
 
@@ -16,12 +17,15 @@ public record PageInfoDto(
         @Schema(description = "전체 페이지 개수")
         int totalPages
 ) {
+
     public PageInfoDto(Page<?> page) {
         this(
                 page.getTotalElements(),
                 page.getSize(),
-                page.getPageable().getPageNumber() + 1,
+                page.getPageable().getPageNumber() +1,
                 page.getTotalPages()
         );
     }
+
+
 }

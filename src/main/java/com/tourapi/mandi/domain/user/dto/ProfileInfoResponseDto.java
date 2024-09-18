@@ -6,8 +6,10 @@ import com.tourapi.mandi.global.exception.Exception400;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 @Schema(description = "프로필 변경 응답 DTO")
+@Builder
 public record ProfileInfoResponseDto(
         @Schema(description = "닉네임", nullable = true)
         String nickname,

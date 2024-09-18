@@ -74,4 +74,14 @@ public class OpenAPIConfig {
                 .pathsToMatch("/courses/**")
                 .build();
     }
+
+
+
+    @Bean
+    public GroupedOpenApi postOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("게시글 API")
+                .pathsToMatch("/posts/**")
+                .build();
+    }
 }

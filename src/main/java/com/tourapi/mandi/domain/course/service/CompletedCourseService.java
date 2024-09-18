@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CompletedCourseService  {
     private final CompletedCourseRepository completedCourseRepository;
     private final UserService userService;
@@ -39,11 +38,12 @@ public class CompletedCourseService  {
             totalDistance = totalDistance.add(completedCourse.getCourse().getDistance());
         }
 
-        return CompletedCourseListResponseDto.builder()
-                .totalCount(completedCourses.size())
-                .totalDistance(totalDistance)
-                .completedCourses(completedCourseDtos)
-                .build();
+       return  CompletedCourseMapper.toCompletedCourseListResponseDto(
+                completedCourses.size(),
+                totalDistance,
+                completedCourseDtos
+        );
+
     }
 
     @Transactional(readOnly = true)
@@ -61,11 +61,11 @@ public class CompletedCourseService  {
             } else completedCourseDtos.add(CompletedCourseMapper.toCompletedCourseDto(completedCourse));
         }
 
-        return ReviewListResponseDto.builder()
-                .totalCompletedCourseCount(completedCourses.size())
-                .totalReviewCount(reviewedDtos.size())
-                .reviewedCourses(reviewedDtos)
-                .notReviewedCourses(completedCourseDtos)
-                .build();
+       return  ReviewMapper.toReviewListResponseDto(
+                completedCourses.size(),
+                reviewedDtos.size(),
+                reviewedDtos,
+                completedCourseDtos
+        );
     }
 }

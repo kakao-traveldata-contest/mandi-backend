@@ -6,6 +6,7 @@ import com.tourapi.mandi.domain.user.dto.ProfileInfoResponseDto;
 import com.tourapi.mandi.domain.user.dto.ProfileUpdateRequestDto;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
+import com.tourapi.mandi.domain.user.util.ProfileInfoMapper;
 import com.tourapi.mandi.global.exception.Exception409;
 import com.tourapi.mandi.global.util.S3ImageClient;
 import lombok.RequiredArgsConstructor;
@@ -49,17 +50,21 @@ public class ProfileService {
 
     public String changeProfileImage(ProfileImageChangeRequestDto requestDto, User user) {
 
-        // 이미지 업로드 후 URL을 반환받음
-        String profileImageUrl = s3ImageClient.base64ImageToS3(requestDto.Base64EncodedImage());
-
-        // 유저 정보를 이메일로 조회
+        // 유저 정보를 이메일로 조회 (혹은 다른 방식으로 조회)
         User existingUser = userService.getExistingUser(user);
 
-        // 유저 정보가 존재하면 imgUrl 업데이트
+        // 기존 이미지 URL이 존재하면 삭제
+        if (existingUser.getImgUrl() != null && !existingUser.getImgUrl().isEmpty()) {
+            s3ImageClient.deleteImageFromS3(existingUser.getImgUrl());
+        }
+
+        // 새로운 이미지 업로드 후 URL을 반환받음
+        String profileImageUrl = s3ImageClient.base64ImageToS3(requestDto.Base64EncodedImage());
+
+        // 유저 정보 업데이트
         existingUser.setImgUrl(profileImageUrl); // imgUrl 업데이트
 
-
-
+        // 변경된 이미지 URL 반환
         return profileImageUrl;
     }
 
@@ -69,14 +74,7 @@ public class ProfileService {
         User existingUser = userService.getExistingUser(user);
 
         //유저 정보를 이용해서 원하는 DTO 반환
-        return new ProfileInfoResponseDto(
-                existingUser.getNickname(),
-                existingUser.getImgUrl(),
-                existingUser.getDescription(),
-                0,
-                0,
-                existingUser.getEmail(),
-                existingUser.getProvider()
-        );
+        return ProfileInfoMapper.toProfileInfoResponseDto(existingUser);
+
     }
 }
