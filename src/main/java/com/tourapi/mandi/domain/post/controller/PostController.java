@@ -3,6 +3,7 @@ package com.tourapi.mandi.domain.post.controller;
 import com.tourapi.mandi.domain.badge.dto.BadgeListResponseDto;
 import com.tourapi.mandi.domain.badge.service.BadgeService;
 import com.tourapi.mandi.domain.post.dto.CreatePostRequestDto;
+import com.tourapi.mandi.domain.post.dto.DetailPostDto;
 import com.tourapi.mandi.domain.post.dto.PostDto;
 import com.tourapi.mandi.domain.post.dto.PostsByCategoryResponseDto;
 import com.tourapi.mandi.domain.post.entity.Category;
@@ -74,5 +75,23 @@ public class PostController {
         // 생성된 게시글의 정보 반환
         return createdPost;
     }
+
+
+    @Operation(summary = "특정 게시글 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
+    })
+    @GetMapping("/{id}")
+    public DetailPostDto getPost( @PathVariable Long id)
+    {
+
+        // 게시글 생성 로직 실행
+        DetailPostDto detailPost = postService.getPostById(id);
+
+        // 생성된 게시글의 정보 반환
+        return detailPost;
+    }
+
 
 }

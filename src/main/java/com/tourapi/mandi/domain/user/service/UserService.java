@@ -107,13 +107,13 @@ public class UserService {
         tokenService.deleteByAccessToken(accessToken);
         blackListTokenService.save(accessToken);
     }
-
+    @Transactional(readOnly = true)
     public void checkRefreshTokenInRedis(String refreshToken) {
         if (!tokenService.existsById(refreshToken)) {
             throw new Exception404(RedisExceptionStatus.REFRESH_TOKEN_NOT_FOUND);
         }
     }
-
+    @Transactional(readOnly = true)
     public User getExistingUser(User user) {
         return userJpaRepository.findById(user.getUserId())
                 .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
