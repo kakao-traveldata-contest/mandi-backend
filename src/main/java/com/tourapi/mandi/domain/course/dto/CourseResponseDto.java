@@ -28,7 +28,10 @@ public record CourseResponseDto(
         BigDecimal ratingAverage,
 
         @Schema(description = "코스 소요 시간")
-        String duration
+        String duration,
+
+        @Schema(description = "코스 이미지 url")
+        String imgUrl
 ) {
     public CourseResponseDto(Course course) {
         this(
@@ -39,7 +42,8 @@ public record CourseResponseDto(
                 course.getEndPoint().getName(),
                 course.getDifficulty(),
                 course.getRatingAverage(),
-                course.getDuration()
+                course.getDuration(),
+                course.getImgUrl()
         );
     }
 }
