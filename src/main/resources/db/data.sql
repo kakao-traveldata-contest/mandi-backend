@@ -17,13 +17,14 @@ INSERT INTO badge_tb(img_url, name, requirements, created_at, last_modified_at)
 VALUES ('test_img06', 'badge06', 'conditions06', now(), now());
 
 INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, created_at, last_modified_at)
-VALUES ( 'hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now());
-
-
-
-INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, created_at, last_modified_at)
-VALUES ( 'hello', 'jhy0285@gmail.com', '', '조영진', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now());
-
+VALUES
+    ('hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'jhy0285@gmail.com', '', '조영진', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'hcy1722@korea.ac.kr', '', 'hcy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'sangmin0205@gmail.com', '', 'sm', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'chosohi20@gmail.com', '', 'csh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'vnclfjqm12@gmail.com', '', 'lsy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now())
+;
 
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
 VALUES(1, 1, now(), now());
