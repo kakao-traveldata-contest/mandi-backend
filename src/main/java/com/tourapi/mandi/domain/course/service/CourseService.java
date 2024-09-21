@@ -2,6 +2,8 @@ package com.tourapi.mandi.domain.course.service;
 
 import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
+import com.tourapi.mandi.domain.course.dto.CourseNearbyRequestDto;
+import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
 import com.tourapi.mandi.domain.course.repository.CourseRepository;
 import com.tourapi.mandi.domain.course.util.CourseMapper;
@@ -23,5 +25,9 @@ public class CourseService {
 
     public List<CourseNameResponseDto> getNames() {
         return CourseMapper.toCourseNameListResponseDto(courseRepository.findAll());
+    }
+
+    public CourseNearbyListResponseDto findCoursesInBound(CourseNearbyRequestDto request) {
+        return CourseMapper.toCourseNearbyResponseDto(courseRepository.findCoursesInBound(request.ne(), request.sw()));
     }
 }
