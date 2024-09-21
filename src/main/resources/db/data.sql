@@ -32,19 +32,6 @@ VALUES(1, 1, now(), now());
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
 VALUES(1, 2, now(), now());
 
-
-
--- INSERT INTO course_tb(course_id, name, distance, created_at, last_modified_at)
--- VALUES (1, 'Sinseondae', 3.2, now(), now()),
---        (2, 'Galmaet-gil', 2.7, now(), now());
-
--- INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, is_reviewed, review_content, review_score,
---                                 reviewed_at, created_at, last_modified_at)
--- VALUES (1, 2, 1, 1, 'good', 5, now(), now(), now()),
---        (2, 2, 2, 0, null, null, null, now(), now());
-
-
-
 -- 카테고리: 'TOURISM', 'TREKKING', 'DINING', 'ACCOMMODATION', 'OTHER'
 
 -- User ID 1과 2 사용, 카테고리는 'TOURISM', 'DINING' 사용
@@ -126,6 +113,16 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://shorturl
         'Oryukdo Sunrise Park', 'Busan, Nam-gu, 용호제2동 산198', 35.09968874976039, 129.12370610050857,
         'Haeundae-gu', 'Busan', 35.158975124359124, 129.16027123108506,
         now(), now());
+
+INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, is_reviewed, review_content, review_score,
+                                reviewed_at, created_at, last_modified_at)
+VALUES (1, 3, 1, 1, 'good', 5, now(), now(), now()),
+       (2, 3, 2, 1, 'nice', 4, now(), now(), now()),
+       (3, 3, 3, 0, null, null, null, now(), now()),
+       (4, 4, 4, 1, 'good', 5, now(), now(), now()),
+       (5, 4, 5, 1, 'nice', 4, now(), now(), now()),
+       (6, 4, 6, 0, null, null, null, now(), now())
+;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
 INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
