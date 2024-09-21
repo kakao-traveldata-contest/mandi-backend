@@ -17,32 +17,20 @@ INSERT INTO badge_tb(img_url, name, requirements, created_at, last_modified_at)
 VALUES ('test_img06', 'badge06', 'conditions06', now(), now());
 
 INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, created_at, last_modified_at)
-VALUES ( 'hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now());
-
-
-
-INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, created_at, last_modified_at)
-VALUES ( 'hello', 'jhy0285@gmail.com', '', '조영진', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now());
-
+VALUES
+    ('hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'jhy0285@gmail.com', '', '조영진', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'hcy1722@korea.ac.kr', '', 'hcy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'sangmin0205@gmail.com', '', 'sm', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'chosohi20@gmail.com', '', 'csh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
+    ('hello', 'vnclfjqm12@gmail.com', '', 'lsy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now())
+;
 
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
 VALUES(1, 1, now(), now());
 
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
 VALUES(1, 2, now(), now());
-
-
-
--- INSERT INTO course_tb(course_id, name, distance, created_at, last_modified_at)
--- VALUES (1, 'Sinseondae', 3.2, now(), now()),
---        (2, 'Galmaet-gil', 2.7, now(), now());
-
--- INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, is_reviewed, review_content, review_score,
---                                 reviewed_at, created_at, last_modified_at)
--- VALUES (1, 2, 1, 1, 'good', 5, now(), now(), now()),
---        (2, 2, 2, 0, null, null, null, now(), now());
-
-
 
 -- 카테고리: 'TOURISM', 'TREKKING', 'DINING', 'ACCOMMODATION', 'OTHER'
 
@@ -125,6 +113,16 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://shorturl
         'Oryukdo Sunrise Park', 'Busan, Nam-gu, 용호제2동 산198', 35.09968874976039, 129.12370610050857,
         'Haeundae-gu', 'Busan', 35.158975124359124, 129.16027123108506,
         now(), now());
+
+INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, is_reviewed, review_content, review_score,
+                                reviewed_at, created_at, last_modified_at)
+VALUES (1, 3, 1, 1, 'good', 5, now(), now(), now()),
+       (2, 3, 2, 1, 'nice', 4, now(), now(), now()),
+       (3, 3, 3, 0, null, null, null, now(), now()),
+       (4, 4, 4, 1, 'good', 5, now(), now(), now()),
+       (5, 4, 5, 1, 'nice', 4, now(), now(), now()),
+       (6, 4, 6, 0, null, null, null, now(), now())
+;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
 INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
