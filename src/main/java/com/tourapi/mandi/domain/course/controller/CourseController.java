@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.course.controller;
 
 import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
+import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
 import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
 import com.tourapi.mandi.domain.course.service.CompletedCourseService;
@@ -12,6 +13,7 @@ import com.tourapi.mandi.global.util.ApiUtils.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,6 +37,13 @@ public class CourseController {
             @ModelAttribute CourseSearchDto courseSearch
     ) {
         return ResponseEntity.ok(ApiUtils.success(courseService.findBySearch(courseSearch)));
+    }
+
+    @Operation(summary = "코스 이름 목록 조회")
+    @ApiResponse(responseCode = "200", description = "코스 이름 목록 조회 성공")
+    @GetMapping("/names")
+    public ResponseEntity<ApiResult<List<CourseNameResponseDto>>> getNames() {
+        return ResponseEntity.ok(ApiUtils.success(courseService.getNames()));
     }
 
     @Operation(summary = "완주한 코스 목록 조회")

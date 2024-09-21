@@ -3,6 +3,7 @@ package com.tourapi.mandi.domain.course.util;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
+import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.entity.Course;
 import com.tourapi.mandi.global.dto.PageInfoDto;
@@ -21,5 +22,11 @@ public final class CourseMapper {
                 .pageInfo(new PageInfoDto(page))
                 .courses(courses)
                 .build();
+    }
+
+    public static List<CourseNameResponseDto> toCourseNameListResponseDto(final List<Course> courses) {
+        return courses.stream()
+                .map(CourseNameResponseDto::new)
+                .toList();
     }
 }
