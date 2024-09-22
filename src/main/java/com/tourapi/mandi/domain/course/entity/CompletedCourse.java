@@ -11,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,12 +29,26 @@ public class CompletedCourse extends AuditingEntity {
     private Long completedCourseId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    @Column(nullable = false, precision = 6, scale = 3)
+    private BigDecimal distance;
+
+    @Column(length = 512, nullable = false)
+    private String trekkingPathImageUrl;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Column(nullable = false)
+    private LocalDateTime startedAt;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @Column(nullable = false)
+    private LocalDateTime completedAt;
 
     @Column(nullable = false)
     private Boolean isReviewed;
@@ -43,4 +59,23 @@ public class CompletedCourse extends AuditingEntity {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime reviewedAt;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        CompletedCourse other = (CompletedCourse) obj;
+        return Objects.equals(getCompletedCourseId(), other.getCompletedCourseId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCompletedCourseId());
+    }
 }

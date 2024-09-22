@@ -35,7 +35,7 @@ public class CompletedCourseService  {
 
         for (final CompletedCourse completedCourse : completedCourses) {
             completedCourseDtos.add(CompletedCourseMapper.toCompletedCourseDto(completedCourse));
-            totalDistance = totalDistance.add(completedCourse.getCourse().getDistance());
+            totalDistance = totalDistance.add(completedCourse.getDistance());
         }
 
        return  CompletedCourseMapper.toCompletedCourseListResponseDto(
