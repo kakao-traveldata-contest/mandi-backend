@@ -13,6 +13,7 @@ public record DetailPostDto(
         Category category,
         String content,
         String title,
+        int likeCnt,
         List<PostImageDto> imgUrlList,
         List<CommentDto> commentList  // 댓글 리스트 추가
 ) {
