@@ -118,14 +118,14 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://shorturl
         'Haeundae-gu', 'Busan', 35.158975124359124, 129.16027123108506,
         now(), now());
 
-INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, distance, is_reviewed, review_content,
-                                review_score, reviewed_at, started_at, completed_at, created_at, last_modified_at)
-VALUES (1, 3, 1, 0.875, 1, 'good', 5, now(), DATEADD('MINUTE', -35, now()), now(), now(), now()),
-       (2, 3, 2, 1.23, 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
-       (3, 3, 3, 2.7, 0, null, null, null, DATEADD('MINUTE', -84, now()), now(), now(), now()),
-       (4, 4, 4, 0.875, 1, 'good', 5, now(), DATEADD('MINUTE', -27, now()), now(), now(), now()),
-       (5, 4, 5, 1.23, 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
-       (6, 4, 6, 4.0, 0, null, null, null, DATEADD('MINUTE', -72, now()), now(), now(), now())
+INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, distance, trekking_path_image_url, is_reviewed,
+                                review_content, review_score, reviewed_at, started_at, completed_at, created_at, last_modified_at)
+VALUES (1, 3, 1, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good', 5, now(), DATEADD('MINUTE', -35, now()), now(), now(), now()),
+       (2, 3, 2, 1.23, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
+       (3, 3, 3, 2.7, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -84, now()), now(), now(), now()),
+       (4, 4, 4, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good', 5, now(), DATEADD('MINUTE', -27, now()), now(), now(), now()),
+       (5, 4, 5, 1.23, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
+       (6, 4, 6, 4.0, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -72, now()), now(), now(), now())
 ;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
