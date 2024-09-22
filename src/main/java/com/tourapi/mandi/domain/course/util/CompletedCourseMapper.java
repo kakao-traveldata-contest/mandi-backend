@@ -20,6 +20,7 @@ public final class CompletedCourseMapper {
                 .courseName(completedCourse.getCourse().getName())
                 .duration(DateTimeUtil.formatDuration(duration))
                 .distance(completedCourse.getDistance())
+                .trekkingPathImageUrl(completedCourse.getTrekkingPathImageUrl())
                 .completedAt(DateTimeUtil.formatDate(completedCourse.getCompletedAt()))
                 .build();
     }

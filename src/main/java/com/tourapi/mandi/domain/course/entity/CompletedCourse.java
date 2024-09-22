@@ -39,6 +39,9 @@ public class CompletedCourse extends AuditingEntity {
     @Column(nullable = false, precision = 6, scale = 3)
     private BigDecimal distance;
 
+    @Column(length = 512, nullable = false)
+    private String trekkingPathImageUrl;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column(nullable = false)
     private LocalDateTime startedAt;

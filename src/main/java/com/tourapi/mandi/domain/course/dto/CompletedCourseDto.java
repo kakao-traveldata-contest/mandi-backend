@@ -18,6 +18,9 @@ public record CompletedCourseDto(
         @Schema(description = "완주 코스 거리")
         BigDecimal distance,
 
+        @Schema(description = "코스 트레킹 경로 이미지 URL")
+        String trekkingPathImageUrl,
+
         @Schema(description = "코스 완주 일시")
         String completedAt
 ) {
