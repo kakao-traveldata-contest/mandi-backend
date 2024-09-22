@@ -36,6 +36,9 @@ public class CompletedCourse extends AuditingEntity {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @Column(nullable = false, precision = 6, scale = 3)
+    private BigDecimal distance;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Column(nullable = false)
     private LocalDateTime startedAt;
