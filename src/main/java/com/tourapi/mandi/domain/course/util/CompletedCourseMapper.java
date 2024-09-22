@@ -19,8 +19,8 @@ public final class CompletedCourseMapper {
                 .id(completedCourse.getCompletedCourseId())
                 .courseName(completedCourse.getCourse().getName())
                 .duration(DateTimeUtil.formatDuration(duration))
-                .distance(completedCourse.getCourse().getDistance())
-                .completedAt(DateTimeUtil.formatDate(completedCourse.getCreatedAt()))
+                .distance(completedCourse.getDistance())
+                .completedAt(DateTimeUtil.formatDate(completedCourse.getCompletedAt()))
                 .build();
     }
 
