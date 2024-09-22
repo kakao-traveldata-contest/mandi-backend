@@ -5,6 +5,7 @@ import com.tourapi.mandi.domain.post.PostExceptionStatus;
 import com.tourapi.mandi.domain.post.dto.CreatePostRequestDto;
 import com.tourapi.mandi.domain.post.dto.DetailPostDto;
 import com.tourapi.mandi.domain.post.dto.PostDto;
+import com.tourapi.mandi.domain.post.dto.UpdatePostRequestDto;
 import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.domain.post.repository.PostRepository;
@@ -91,6 +92,23 @@ public class PostService {
                 () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
         );
         
+        // S3에 해당하는 이미지들 전부삭제
+        existingPost.getPostImageList().forEach(postImage -> s3ImageClient.deleteImageFromS3(postImage.getUrl()));
+
+        // Post 삭제
+        postRepository.deleteById(id);
+
+        return true;
+    }
+
+
+
+    public PostDto updatePost(Long id, User user, UpdatePostRequestDto updatePostRequestDto) {
+
+        Post existingPost = postRepository.findPostWithDetailsById(id).orElseThrow(
+                () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
+        );
+
         // S3에 해당하는 이미지들 전부삭제
         existingPost.getPostImageList().forEach(postImage -> s3ImageClient.deleteImageFromS3(postImage.getUrl()));
 

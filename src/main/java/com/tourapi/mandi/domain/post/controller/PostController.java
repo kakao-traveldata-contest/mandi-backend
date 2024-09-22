@@ -1,9 +1,6 @@
 package com.tourapi.mandi.domain.post.controller;
 
-import com.tourapi.mandi.domain.post.dto.CreatePostRequestDto;
-import com.tourapi.mandi.domain.post.dto.DetailPostDto;
-import com.tourapi.mandi.domain.post.dto.PostDto;
-import com.tourapi.mandi.domain.post.dto.PostsByCategoryResponseDto;
+import com.tourapi.mandi.domain.post.dto.*;
 import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.service.PostService;
 import com.tourapi.mandi.domain.post.util.PostMapper;
@@ -58,7 +55,8 @@ public class PostController {
     @Operation(summary = "게시글 생성")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 생성 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러"),
+            @ApiResponse(responseCode = "400", description = "S3 이미지 생성 에러")
     })
     @PostMapping("/create")
     public ResponseEntity<ApiUtils.ApiResult<PostDto>> createPost(
@@ -78,7 +76,8 @@ public class PostController {
     @Operation(summary = "게시글 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 삭제 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 요청 에러")
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 삭제 에러"),
+            @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiUtils.ApiResult<Boolean>> deletePost(
@@ -91,11 +90,31 @@ public class PostController {
 
 
 
+    @Operation(summary = "게시글 변경")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 변경 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 변경 에러"),
+            @ApiResponse(responseCode = "400", description = "S3 이미지 생성 에러"),
+            @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiUtils.ApiResult<PostDto>> updatePost(
+            UpdatePostRequestDto updatePostRequestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(ApiUtils.success(postService.updatePost(id,userDetails.user(),updatePostRequestDto)));
+    }
+
+
+
+
+
 
     @Operation(summary = "특정 게시글 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 요청 에러")
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글 조희 에러")
     })
     @GetMapping("/{id}")
     public ResponseEntity<ApiUtils.ApiResult<DetailPostDto>> getPost(@PathVariable Long id)
