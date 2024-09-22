@@ -21,7 +21,7 @@ public final class ReviewMapper {
                 .isReviewed(completedCourse.getIsReviewed())
                 .content(completedCourse.getReviewContent())
                 .score(completedCourse.getReviewScore())
-                .reviewedAt(completedCourse.getReviewedAt())
+                .reviewedAt(DateTimeUtil.formatDate(completedCourse.getReviewedAt()))
                 .build();
     }
 
