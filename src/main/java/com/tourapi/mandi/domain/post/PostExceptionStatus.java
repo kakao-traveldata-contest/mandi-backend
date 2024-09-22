@@ -1,4 +1,4 @@
-package com.tourapi.mandi.domain.user;
+package com.tourapi.mandi.domain.post;
 
 
 import com.tourapi.mandi.global.exception.BaseExceptionStatus;

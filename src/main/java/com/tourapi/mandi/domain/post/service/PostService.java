@@ -1,6 +1,7 @@
 package com.tourapi.mandi.domain.post.service;
 
 
+import com.tourapi.mandi.domain.post.PostExceptionStatus;
 import com.tourapi.mandi.domain.post.dto.CreatePostRequestDto;
 import com.tourapi.mandi.domain.post.dto.DetailPostDto;
 import com.tourapi.mandi.domain.post.dto.PostDto;
@@ -8,7 +9,6 @@ import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.domain.post.repository.PostRepository;
 import com.tourapi.mandi.domain.post.util.PostMapper;
-import com.tourapi.mandi.domain.user.PostExceptionStatus;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
@@ -82,6 +82,22 @@ public class PostService {
 
         // PostDto로 변환하여 반환
         return PostMapper.toDetailPostDto(existingPost);
+    }
+
+
+    public boolean deletePost(Long id) {
+
+        Post existingPost = postRepository.findPostWithDetailsById(id).orElseThrow(
+                () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
+        );
+        
+        // S3에 해당하는 이미지들 전부삭제
+        existingPost.getPostImageList().forEach(postImage -> s3ImageClient.deleteImageFromS3(postImage.getUrl()));
+
+        // Post 삭제
+        postRepository.deleteById(id);
+
+        return true;
     }
 
 }

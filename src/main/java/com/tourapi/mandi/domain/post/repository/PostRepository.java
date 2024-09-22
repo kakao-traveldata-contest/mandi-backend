@@ -17,7 +17,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByCategoryOrderByCreatedAtDesc(@Param("category") Category category, Pageable pageable);
 
     // 모든 게시글을 최신순으로 페이지로 가져오는 메서드
-    @Query("select p from Post p join fetch p.user")
+//    @Query("select p from Post p join fetch p.user")
+    @Query("select distinct p from Post p " +
+            "join fetch p.user u " +
+            "left join fetch p.postImageList pil " +
+            "order by p.createdAt desc")
     Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
 
