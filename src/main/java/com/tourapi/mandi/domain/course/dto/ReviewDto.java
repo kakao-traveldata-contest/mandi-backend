@@ -1,7 +1,6 @@
 package com.tourapi.mandi.domain.course.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
@@ -19,6 +18,6 @@ public record ReviewDto(
         Integer score,
 
         @Schema(description = "후기 작성 일시")
-        LocalDateTime reviewedAt
+        String reviewedAt
 ) {
 }
