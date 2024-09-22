@@ -50,29 +50,23 @@ VALUES(1, 2, now(), now());
 INSERT INTO post_tb (user_id, category, content, title, like_cnt, created_at, last_modified_at)
 VALUES
     (1, 'TOURISM', 'This is a post about tourism.', 'Tourism Post', 10, now(), now()),
-    (2, 'DINING', 'This is a post about dining.', 'Dining Post', 5, now(), now()),
-    (1, 'TREKKING', 'Trekking experience post content.', 'Trekking Post', 15, now(), now()),
-    (2, 'ACCOMMODATION', 'Great accommodation tips.', 'Accommodation Post', 7, now(), now()),
-    (2, 'DINING', 'This is a post about ssssdining.', 'Dining Post', 15, now(), now()),
-    (1, 'OTHER', 'Random content.', 'Miscellaneous Post', 3, now(), now()),
-    (1, 'TREKKING', '게시글삭제시 s3에 정말로 됨?', 'Trekking Experience with Images', 4, now(), now());
+    (2, 'DINING', 'This is a post about dining.', 'Dining Post', 5, now(), now());
 
 
--- PostImage 테이블에 이미지 데이터 추가
--- post_id는 post_tb의 게시글 ID를 참조합니다.
 
-INSERT INTO post_image_tb (post_id, url)
-VALUES
-    (1, 'https://example.com/image1.jpg'),
-    (1, 'https://example.com/image2.jpg'),
-    (2, 'https://example.com/image3.jpg'),
-    (2, 'https://example.com/image199.jpg'),
-    (3, 'https://example.com/image4.jpg'),
-    (3, 'https://example.com/image5.jpg'),
-    (4, 'https://example.com/image6.jpg'),
-    (7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/a1a51238-b5c9-44b6-b9db-05670fe18ca5'),
-    (7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/d506deb5-917b-4e94-8a5c-5fa51bd7a79d'),
-    (7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/7b8cd966-b2ca-4007-840a-52e834906bbf');
+-- -- PostImage 테이블에 이미지 데이터 추가
+-- -- post_id는 post_tb의 게시글 ID를 참조합니다.
+--
+-- INSERT INTO post_image_tb (post_id, url)
+-- VALUES
+--     (1, 'https://example.com/image1.jpg'),
+--     (1, 'https://example.com/image2.jpg'),
+--     (2, 'https://example.com/image3.jpg'),
+--     (2, 'https://example.com/image199.jpg'),
+--     (3, 'https://example.com/image4.jpg'),
+--     (3, 'https://example.com/image5.jpg'),
+--     (4, 'https://example.com/image6.jpg');
+
 
 INSERT INTO course_tb(course_id, name, distance, difficulty, duration, img_url,
                       rating_average, route_url,
@@ -134,18 +128,14 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://shorturl
 INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
 VALUES
     (1, NULL, 'This is a comment on the first post.', 5, now(), now()),  -- 1번 게시글에 대한 댓글
-    (2, NULL, 'Another comment on a different post.', 3, now(), now()), -- 2번 게시글에 대한 댓글
-    (3, NULL, 'A comment on the trekking post.', 8, now(), now()), -- 3번 게시글에 대한 댓글
-    (4, NULL, 'Comment about the accommodation post.', 2, now(), now()), -- 4번 게시글에 대한 댓글
-    (5, NULL, 'A comment on the random post.', 1, now(), now()), -- 5번 게시글에 대한 댓글
-    (7, NULL, 'This is a comment on the post with images.', 5, now(), now()); --7번 게시글에 대한 댓글
+    (2, NULL, 'Another comment on a different post.', 3, now(), now()); -- 2번 게시글에 대한 댓글
+
+
 
 
 -- 대댓글 (parent_comment_id가 기존 댓글의 comment_id)
 INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
 VALUES
     (1, 1, 'This is a reply to the first comment on post 1.', 2, now(), now()),  -- 1번 게시글의 1번 댓글에 대한 대댓글
-    (2, 2, 'A reply to the second post comment.', 1, now(), now()), -- 2번 게시글의 2번 댓글에 대한 대댓글
-    (3, 3, 'A reply to the trekking post comment.', 0, now(), now()), -- 3번 게시글의 3번 댓글에 대한 대댓글
-    (4, 4, 'This is a reply to the accommodation comment.', 0, now(), now()), -- 4번 게시글의 4번 댓글에 대한 대댓글
-    (5, 5, 'Reply to the random comment.', 1, now(), now()); -- 5번 게시글의 5번 댓글에 대한 대댓글
+    (2, 2, 'A reply to the second post comment.', 1, now(), now());-- 2번 게시글의 2번 댓글에 대한 대댓글
+

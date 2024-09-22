@@ -85,7 +85,7 @@ public class PostController {
 
             @PathVariable Long id) {
 
-        return ResponseEntity.ok(ApiUtils.success(postService.deletePost(id)));
+        return ResponseEntity.ok(ApiUtils.success(postService.deletePost(id,userDetails.user())));
     }
 
 
@@ -99,7 +99,7 @@ public class PostController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<ApiUtils.ApiResult<PostDto>> updatePost(
-            UpdatePostRequestDto updatePostRequestDto,
+            @RequestBody @Valid UpdatePostRequestDto updatePostRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long id) {
 

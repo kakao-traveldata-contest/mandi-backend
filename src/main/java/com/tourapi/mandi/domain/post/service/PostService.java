@@ -8,21 +8,26 @@ import com.tourapi.mandi.domain.post.dto.PostDto;
 import com.tourapi.mandi.domain.post.dto.UpdatePostRequestDto;
 import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
+import com.tourapi.mandi.domain.post.entity.PostImage;
 import com.tourapi.mandi.domain.post.repository.PostRepository;
 import com.tourapi.mandi.domain.post.util.PostMapper;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
+import com.tourapi.mandi.global.exception.Exception403;
 import com.tourapi.mandi.global.exception.Exception404;
 import com.tourapi.mandi.global.util.S3ImageClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,11 +91,16 @@ public class PostService {
     }
 
 
-    public boolean deletePost(Long id) {
+    public boolean deletePost(Long id,User user) {
 
         Post existingPost = postRepository.findPostWithDetailsById(id).orElseThrow(
                 () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
         );
+
+        // 게시글 작성자와 요청한 사용자가 일치하는지 확인
+        if (!existingPost.getUser().getUserId().equals(user.getUserId())) {
+            throw new Exception403(PostExceptionStatus.USER_NOT_AUTHORIZED);
+        }
         
         // S3에 해당하는 이미지들 전부삭제
         existingPost.getPostImageList().forEach(postImage -> s3ImageClient.deleteImageFromS3(postImage.getUrl()));
@@ -109,13 +119,38 @@ public class PostService {
                 () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
         );
 
-        // S3에 해당하는 이미지들 전부삭제
+        // 게시글 작성자와 요청한 사용자가 일치하는지 확인
+        if (!existingPost.getUser().getUserId().equals(user.getUserId())) {
+            throw new Exception403(PostExceptionStatus.USER_NOT_AUTHORIZED);
+        }
+
+        //우선 dto에잇는 정보들로 post 내용변경
+        existingPost.setTitle(updatePostRequestDto.title());
+        existingPost.setContent(updatePostRequestDto.content());
+        existingPost.setCategory(updatePostRequestDto.category());
+
+        //s3이미지삭제
         existingPost.getPostImageList().forEach(postImage -> s3ImageClient.deleteImageFromS3(postImage.getUrl()));
 
-        // Post 삭제
-        postRepository.deleteById(id);
+        //post에 postImage비움 양방향 관계라서 여기서 지워도 지워짐
+        existingPost.getPostImageList().clear();
 
-        return true;
+        // CreatePostRequestDto에서 값 추출
+        List<String> base64EncodedImageList = updatePostRequestDto.Base64EncodedImageList();
+
+        // 이미지 목록을 S3에 업로드하고 URL 리스트를 생성
+        List<String> imgUrlList = base64EncodedImageList.stream()
+                .map(s3ImageClient::base64ImageToS3)  // base64 값을 해독해 S3에 업로드 후 URL 반환
+                .toList();
+
+        List<PostImage> postImageList = imgUrlList.stream()
+                .map(url -> PostMapper.toPostImageFromUrl(url, existingPost))
+                .collect(Collectors.toList());
+
+        // Post에 이미지 리스트를 설정
+        existingPost.getPostImageList().addAll(postImageList);
+
+        return PostMapper.toPostDto(existingPost);
     }
 
 }

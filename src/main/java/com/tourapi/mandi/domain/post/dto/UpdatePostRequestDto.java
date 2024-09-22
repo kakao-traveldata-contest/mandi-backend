@@ -8,13 +8,10 @@ import java.util.List;
 
 @Builder
 public record UpdatePostRequestDto(
-        Long postId,
-        UserDto user,
         Category category,
         String content,
         String title,
-        int likeCnt,
-        List<String> imgUrl
+        List<String> Base64EncodedImageList
 ) {
 
 }

@@ -27,14 +27,17 @@ public class Post  extends AuditingEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     private Category category;
 
+    @Setter
     @Lob
     @Column(name = "content")
     private String content;
 
+    @Setter
     @Column(name = "title", length = 150, nullable = false)
     private String title;
 
