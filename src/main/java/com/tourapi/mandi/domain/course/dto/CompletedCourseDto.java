@@ -19,6 +19,6 @@ public record CompletedCourseDto(
         BigDecimal distance,
 
         @Schema(description = "코스 완주 일시")
-        LocalDateTime completedAt
+        String completedAt
 ) {
 }
