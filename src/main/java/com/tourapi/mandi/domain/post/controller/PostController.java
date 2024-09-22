@@ -46,9 +46,7 @@ public class PostController {
 
         Page<PostDto> postPage = postService.getPostsByCategory(category, page-1, size);
 
-        PostsByCategoryResponseDto postsByCategoryResponseD= PostMapper.toPostsByCategoryResponseDto(postPage);
-
-        return ResponseEntity.ok(ApiUtils.success(postsByCategoryResponseD));
+        return ResponseEntity.ok(ApiUtils.success(PostMapper.toPostsByCategoryResponseDto(postPage)));
     }
 
 
