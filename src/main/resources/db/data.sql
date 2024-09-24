@@ -53,21 +53,6 @@ VALUES
     (2, 'DINING', 'This is a post about dining.', 'Dining Post', 5, now(), now());
 
 
-
--- -- PostImage 테이블에 이미지 데이터 추가
--- -- post_id는 post_tb의 게시글 ID를 참조합니다.
---
--- INSERT INTO post_image_tb (post_id, url)
--- VALUES
---     (1, 'https://example.com/image1.jpg'),
---     (1, 'https://example.com/image2.jpg'),
---     (2, 'https://example.com/image3.jpg'),
---     (2, 'https://example.com/image199.jpg'),
---     (3, 'https://example.com/image4.jpg'),
---     (3, 'https://example.com/image5.jpg'),
---     (4, 'https://example.com/image6.jpg');
-
-
 INSERT INTO course_tb(course_id, name, distance, difficulty, duration, img_url,
                       rating_average, route_url,
                       mid_latitude, mid_longitude,

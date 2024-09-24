@@ -21,13 +21,11 @@ public class AuditingEntity {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     @Column(nullable = false, updatable = false)
     protected LocalDateTime createdAt;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @LastModifiedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     @Column(nullable = false)
     protected LocalDateTime lastModifiedAt;
 

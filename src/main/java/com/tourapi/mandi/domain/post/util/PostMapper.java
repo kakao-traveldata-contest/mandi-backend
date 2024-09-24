@@ -22,12 +22,31 @@ public final class PostMapper {
 
 
     public static PostDto toPostDto(Post post) {
+
+
+        // 부모 댓글 리스트
+        List<CommentDto> parentComments = post.getCommentList().stream()
+                .filter(c -> c.getParentComment() == null)  // 부모 댓글만 포함
+                .map(PostMapper::toCommentDto)
+                .toList();
+
+        // 댓글의 총 개수 계산
+        int totalCommentCount = post.getCommentList().size();  // 모든 댓글 개수
+        int childCommentCount = post.getCommentList().stream()
+                .mapToInt(comment -> comment.getChildComments().size())
+                .sum();  // 자식 댓글 개수 계산
+
+
+
         return PostDto.builder()
                 .postId(post.getPostId())
                 .user(toUserDto(post.getUser()))
                 .category(post.getCategory())
                 .content(post.getContent())
                 .title(post.getTitle())
+                .uploadDate(post.getCreatedAt())
+                .likeCnt(post.getLikeCnt())
+                .commentCnt(totalCommentCount)
                 .imgUrlList(post.getPostImageList().stream().map(PostMapper::toPostImageDto).toList())
                 .build();
     }
@@ -136,7 +155,8 @@ public final class PostMapper {
                 .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null)
                 .content(comment.getContent())  // 댓글 내용
                 .likeCnt(comment.getLikeCnt())  // 좋아요 수
-                .userDto(toUserDto(comment.getUser()))
+                .user(toUserDto(comment.getUser()))
+                .uploadDate(comment.getCreatedAt())
                 .childComments(comment.getChildComments().stream()
                         .map(PostMapper::toCommentDto)
                         .toList())  // 자식 댓글 리스트
