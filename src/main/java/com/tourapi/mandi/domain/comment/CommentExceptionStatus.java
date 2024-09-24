@@ -1,15 +1,13 @@
-package com.tourapi.mandi.domain.post;
-
+package com.tourapi.mandi.domain.comment;
 
 import com.tourapi.mandi.global.exception.BaseExceptionStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum PostExceptionStatus implements BaseExceptionStatus {
+public enum CommentExceptionStatus implements BaseExceptionStatus {
 
-    POST_NOT_FOUND("해당하는 게시글이 없습니다.", 404, "24040"),
-    USER_NOT_AUTHORIZED("권한이 없는 유저입니다.", 403, "24030");
+    COMMENT_NOT_FOUND("해당하는 댓글이 없습니다.", 404, "44000");
 
     @Getter
     private final String message;

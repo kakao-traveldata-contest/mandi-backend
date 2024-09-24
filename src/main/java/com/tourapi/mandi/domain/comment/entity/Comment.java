@@ -15,7 +15,6 @@ import java.util.Set;
 @Entity
 @Table(name = "comment_tb")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Comment extends AuditingEntity {
 
@@ -43,5 +42,6 @@ public class Comment extends AuditingEntity {
     private String content;  // 댓글 본문
 
     @Column(name = "like_cnt", nullable = false)
+    @Setter
     private int likeCnt;  // 좋아요 수
 }
