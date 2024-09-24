@@ -46,6 +46,7 @@ public class Post  extends AuditingEntity {
     private List<PostImage> postImageList;
 
     @Column(name = "like_cnt", nullable = false)
+    @Setter
     private int likeCnt;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
