@@ -14,8 +14,11 @@ public record DetailPostDto(
         String content,
         String title,
         int likeCnt,
+        int CommentCnt,
+        String uploadDate,
         List<PostImageDto> imgUrlList,
-        List<CommentDto> commentList  // 댓글 리스트 추가
+        List<CommentDto> commentList  // 댓글 리스트 추가,
+
 ) {
 
 }

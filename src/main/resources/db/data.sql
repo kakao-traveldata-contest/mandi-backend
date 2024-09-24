@@ -125,17 +125,14 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://shorturl
         now(), now());
 
 -- 기본 댓글 (parent_comment_id가 NULL)
-INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
+INSERT INTO comment_tb (post_id, parent_comment_id, user_id, content, like_cnt, created_at, last_modified_at)
 VALUES
-    (1, NULL, 'This is a comment on the first post.', 5, now(), now()),  -- 1번 게시글에 대한 댓글
-    (2, NULL, 'Another comment on a different post.', 3, now(), now()); -- 2번 게시글에 대한 댓글
-
-
-
+    (1, NULL, 1, 'This is a comment on the first post.', 5, now(), now()),  -- comment_id = 1
+    (2, NULL, 2, 'Another comment on a different post.', 3, now(), now()); -- comment_id = 2
 
 -- 대댓글 (parent_comment_id가 기존 댓글의 comment_id)
-INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
+INSERT INTO comment_tb (post_id, parent_comment_id, user_id, content, like_cnt, created_at, last_modified_at)
 VALUES
-    (1, 1, 'This is a reply to the first comment on post 1.', 2, now(), now()),  -- 1번 게시글의 1번 댓글에 대한 대댓글
-    (2, 2, 'A reply to the second post comment.', 1, now(), now());-- 2번 게시글의 2번 댓글에 대한 대댓글
-
+    (1, 1, 2, 'This is a reply to the first comment on post 1.', 2, now(), now()),  -- comment_id = 3
+    (2, 2, 1, 'A reply to the second post comment.', 1, now(), now()),            -- comment_id = 4
+    (2, 2, 1, 'A reply to the 젠장 마커스! post comment.', 1, now(), now());   -- comment_id = 5
