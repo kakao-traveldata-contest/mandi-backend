@@ -41,21 +41,6 @@ VALUES
     (2, 'DINING', 'This is a post about dining.', 'Dining Post', 5, now(), now());
 
 
-
--- -- PostImage 테이블에 이미지 데이터 추가
--- -- post_id는 post_tb의 게시글 ID를 참조합니다.
---
--- INSERT INTO post_image_tb (post_id, url)
--- VALUES
---     (1, 'https://example.com/image1.jpg'),
---     (1, 'https://example.com/image2.jpg'),
---     (2, 'https://example.com/image3.jpg'),
---     (2, 'https://example.com/image199.jpg'),
---     (3, 'https://example.com/image4.jpg'),
---     (3, 'https://example.com/image5.jpg'),
---     (4, 'https://example.com/image6.jpg');
-
-
 INSERT INTO course_tb(course_id, name, distance, difficulty, duration, img_url,
                       rating_average, route_url,
                       mid_latitude, mid_longitude,
@@ -123,17 +108,14 @@ VALUES (1, 3, 1, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c19
 ;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
-INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
+INSERT INTO comment_tb (post_id, parent_comment_id, user_id, content, like_cnt, created_at, last_modified_at)
 VALUES
-    (1, NULL, 'This is a comment on the first post.', 5, now(), now()),  -- 1번 게시글에 대한 댓글
-    (2, NULL, 'Another comment on a different post.', 3, now(), now()); -- 2번 게시글에 대한 댓글
-
-
-
+    (1, NULL, 1, 'This is a comment on the first post.', 5, now(), now()),  -- comment_id = 1
+    (2, NULL, 2, 'Another comment on a different post.', 3, now(), now()); -- comment_id = 2
 
 -- 대댓글 (parent_comment_id가 기존 댓글의 comment_id)
-INSERT INTO comment_tb (post_id, parent_comment_id, content, like_cnt, created_at, last_modified_at)
+INSERT INTO comment_tb (post_id, parent_comment_id, user_id, content, like_cnt, created_at, last_modified_at)
 VALUES
-    (1, 1, 'This is a reply to the first comment on post 1.', 2, now(), now()),  -- 1번 게시글의 1번 댓글에 대한 대댓글
-    (2, 2, 'A reply to the second post comment.', 1, now(), now());-- 2번 게시글의 2번 댓글에 대한 대댓글
-
+    (1, 1, 2, 'This is a reply to the first comment on post 1.', 2, now(), now()),  -- comment_id = 3
+    (2, 2, 1, 'A reply to the second post comment.', 1, now(), now()),            -- comment_id = 4
+    (2, 2, 1, 'A reply to the 젠장 마커스! post comment.', 1, now(), now());   -- comment_id = 5
