@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.comment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tourapi.mandi.domain.post.entity.Post;
+import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +35,9 @@ public class Comment extends AuditingEntity {
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> childComments = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "content", length = 500, nullable = false)
     private String content;  // 댓글 본문
