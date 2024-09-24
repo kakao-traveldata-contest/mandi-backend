@@ -153,4 +153,45 @@ public class PostService {
         return PostMapper.toPostDto(existingPost);
     }
 
+
+
+
+    // 좋아요 추가
+    public boolean addLike(Long postId, User user) {
+        // 게시글 조회
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new Exception404(PostExceptionStatus.POST_NOT_FOUND));
+
+
+        //유저만 좋아요 가능
+        userJpaRepository.findById(user.getUserId())
+                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+
+        // 좋아요 수 증가
+        post.setLikeCnt(post.getLikeCnt() + 1);
+
+
+        return true;
+    }
+
+    // 좋아요 삭제
+    @Transactional
+    public boolean removeLike(Long postId, User user) {
+        // 게시글 조회
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new Exception404(PostExceptionStatus.POST_NOT_FOUND));
+
+        //유저만 좋아요 가능
+        userJpaRepository.findById(user.getUserId())
+                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+
+
+
+        // 좋아요 수 감소
+        post.setLikeCnt(post.getLikeCnt() - 1);
+
+
+        return true;
+    }
+
 }
