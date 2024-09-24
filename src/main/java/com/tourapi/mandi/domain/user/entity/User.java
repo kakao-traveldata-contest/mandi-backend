@@ -1,11 +1,14 @@
 package com.tourapi.mandi.domain.user.entity;
 
+import com.tourapi.mandi.domain.comment.entity.Comment;
+import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.domain.user.entity.constant.Provider;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -15,6 +18,14 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_tb")
 public class User extends AuditingEntity {
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Post> posts;
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

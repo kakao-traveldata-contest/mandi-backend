@@ -4,6 +4,7 @@ import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
 import com.tourapi.mandi.domain.user.dto.ReissueDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.GoogleUserInfo;
+import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.service.GoogleService;
 import com.tourapi.mandi.domain.user.service.UserService;
 import com.tourapi.mandi.global.redis.entity.Token;
@@ -119,6 +120,18 @@ public class LoginController {
     }
 
 
+    @Operation(summary = "유저 id 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "id 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "해당 토큰 값의 유저 존재하지 않을 시"),
+    })
+    @GetMapping("/id")
+    public ResponseEntity<ApiResult<Long>> getId(
+            @AuthenticationPrincipal CustomUserDetails userDetails)
+    {
+        User user = userService.getId(userDetails.user());
+        return ResponseEntity.ok(ApiUtils.success(user.getUserId()));
+    }
 
 }
 

@@ -10,7 +10,6 @@ import com.tourapi.mandi.domain.user.dto.ReissueDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
 import com.tourapi.mandi.domain.user.entity.User;
-import com.tourapi.mandi.domain.user.entity.constant.Role;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
 
 import com.tourapi.mandi.domain.user.util.LoginMapper;
@@ -22,7 +21,7 @@ import com.tourapi.mandi.global.redis.service.BlackListTokenService;
 import com.tourapi.mandi.global.redis.service.TokenService;
 import com.tourapi.mandi.global.security.JwtProvider;
 import java.util.Optional;
-import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -129,5 +128,15 @@ public class UserService {
         } catch (TokenExpiredException tee) {
             throw new Exception400(UserExceptionStatus.REFRESH_TOKEN_EXPIRED);
         }
+    }
+
+
+
+
+
+    public User getId(User user) {
+        return userJpaRepository.findById(user.getUserId())
+                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+
     }
 }
