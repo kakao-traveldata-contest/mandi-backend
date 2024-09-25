@@ -55,8 +55,11 @@ public class UserService {
             return LoginMapper.toLoginResponseDto(refreshToken,accessToken,true);
 
         }
-        //유저정보 없을경우 => 처음 가입하는 유저
-        return LoginMapper.toLoginResponseDto(null,null,false);
+        else{
+            throw new Exception404(UserExceptionStatus.USER_NOT_FOUND);
+        }
+//        //유저정보 없을경우 => 처음 가입하는 유저
+//        return LoginMapper.toLoginResponseDto(null,null,false);
     }
 
     public LoginResponseDto socialSignup(OauthUserInfo userInfo, SignupRequestDto signupRequestDto) {
