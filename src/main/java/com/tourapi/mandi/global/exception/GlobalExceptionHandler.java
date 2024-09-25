@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> pathVarValidationException(ConstraintViolationException exception) {
         ApiUtils.ApiResult<?> apiResult = ApiUtils.error(exception.getMessage(),
                 HttpStatus.BAD_REQUEST.value(), "04000");
+        log.error("클라이언트 에러 발생 | Message = {}", exception.getMessage());
         return new ResponseEntity<>(apiResult, HttpStatus.BAD_REQUEST);
     }
 

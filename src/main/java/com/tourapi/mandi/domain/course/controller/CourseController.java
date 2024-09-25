@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "코스 API 목록")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/courses")
@@ -40,6 +42,7 @@ public class CourseController {
     public ResponseEntity<ApiResult<CourseListResponseDto>> findCourses(
             @ModelAttribute CourseSearchDto courseSearch
     ) {
+        log.info("코스 목록 조회 호출 | parameter = {}", courseSearch);
         return ResponseEntity.ok(ApiUtils.success(courseService.findBySearch(courseSearch)));
     }
 
@@ -47,6 +50,7 @@ public class CourseController {
     @ApiResponse(responseCode = "200", description = "코스 이름 목록 조회 성공")
     @GetMapping("/names")
     public ResponseEntity<ApiResult<List<CourseNameResponseDto>>> getNames() {
+        log.info("코스 이름 목록 조회 호출");
         return ResponseEntity.ok(ApiUtils.success(courseService.getNames()));
     }
 
@@ -56,6 +60,7 @@ public class CourseController {
     public ResponseEntity<ApiResult<CourseNearbyListResponseDto>> getNearbyCourses(
             @RequestBody CourseNearbyRequestDto courseNearbyRequestDto
     ) {
+        log.info("주변 코스 목록 조회 호출 | parameter = {}", courseNearbyRequestDto);
         return ResponseEntity.ok(ApiUtils.success(courseService.findCoursesInBound(courseNearbyRequestDto)));
     }
 
