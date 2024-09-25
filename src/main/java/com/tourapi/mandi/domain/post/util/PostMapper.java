@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,6 +100,7 @@ public final class PostMapper {
                 .content(createPostRequestDto.content())
                 .title(createPostRequestDto.title())
                 .likeCnt(0)
+                .commentList(new HashSet<>())
                 .build();
 
         // 이미지 목록을 S3에 업로드하고, URL 리스트를 생성한 후 PostImage로 변환 (Post 객체 전달)
