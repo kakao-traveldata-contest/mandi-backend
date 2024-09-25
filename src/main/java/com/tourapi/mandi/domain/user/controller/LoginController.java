@@ -98,12 +98,12 @@ public class LoginController {
             @ApiResponse(responseCode = "404", description = "해당 토큰 값이 Redis에 존재하지 않을시")
     })
     @PostMapping("/withdrawal")
-    public ResponseEntity<ApiResult<LoginResponseDto>> withdrawal(
+    public ResponseEntity<ApiResult<Boolean>> withdrawal(
             HttpServletRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        userService.withdrawal(userDetails.user(), request.getHeader(JwtProvider.HEADER));
-        return ResponseEntity.ok(ApiUtils.success(null));
+        boolean result =userService.withdrawal(userDetails.user(), request.getHeader(JwtProvider.HEADER));
+        return ResponseEntity.ok(ApiUtils.success(result));
     }
 
 

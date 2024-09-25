@@ -33,7 +33,7 @@ public class ProfileService {
         return true;
     }
 
-    public boolean updateProfile(ProfileUpdateRequestDto requestDto, User user) {
+    public Boolean updateProfile(ProfileUpdateRequestDto requestDto, User user) {
         User existingUser = userService.getExistingUser(user);
 
         if (!requestDto.nickname().equals(existingUser.getNickname())) {

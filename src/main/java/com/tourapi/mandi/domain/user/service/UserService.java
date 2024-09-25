@@ -97,7 +97,7 @@ public class UserService {
         blackListTokenService.save(accessToken);
     }
 
-    public void withdrawal(User user, String accessToken) {
+    public boolean withdrawal(User user, String accessToken) {
 
 
         userJpaRepository.findById(user.getUserId()).ifPresentOrElse(
@@ -108,6 +108,7 @@ public class UserService {
         );
         tokenService.deleteByAccessToken(accessToken);
         blackListTokenService.save(accessToken);
+        return true;
     }
     @Transactional(readOnly = true)
     public void checkRefreshTokenInRedis(String refreshToken) {
