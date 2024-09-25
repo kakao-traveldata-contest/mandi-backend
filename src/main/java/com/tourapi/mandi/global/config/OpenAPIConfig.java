@@ -84,4 +84,14 @@ public class OpenAPIConfig {
                 .pathsToMatch("/posts/**")
                 .build();
     }
+
+
+
+    @Bean
+    public GroupedOpenApi commentOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("댓글 API")
+                .pathsToMatch("/comments/**")
+                .build();
+    }
 }
