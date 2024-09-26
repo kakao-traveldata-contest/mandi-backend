@@ -1,6 +1,6 @@
 package com.tourapi.mandi.global.config;
 
-import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter;
+import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class OpenTelemetryConfig {
 
-    @Value("${management.otlp.tracing.endpoint:http://localhost:4318}")
+    @Value("${tracing.url:http://localhost:4317}")
     private String tracesEndpoint;
 
     @Bean
     public SpanExporter spanExporter() {
-        return OtlpHttpSpanExporter.builder().setEndpoint(tracesEndpoint).build();
+        return OtlpGrpcSpanExporter.builder().setEndpoint(tracesEndpoint).build();
     }
 }
