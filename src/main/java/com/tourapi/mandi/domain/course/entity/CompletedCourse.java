@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.course.entity;
 
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.global.util.AuditingEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,9 +11,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -56,6 +59,9 @@ public class CompletedCourse extends AuditingEntity {
     private String reviewContent;
 
     private Integer reviewScore;
+
+    @OneToMany(mappedBy = "completedCourse", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewImage> reviewImageList;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime reviewedAt;
