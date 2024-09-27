@@ -5,7 +5,7 @@ import com.tourapi.mandi.domain.course.entity.DifficultyLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 
-public record CourseResponseDto(
+public record CourseListItemResponseDto(
         @Schema(description = "코스 id")
         Long id,
 
@@ -33,7 +33,7 @@ public record CourseResponseDto(
         @Schema(description = "코스 이미지 url")
         String imgUrl
 ) {
-    public CourseResponseDto(Course course) {
+    public CourseListItemResponseDto(Course course) {
         this(
                 course.getCourseId(),
                 course.getName(),

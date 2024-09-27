@@ -11,6 +11,6 @@ public record CourseListResponseDto(
         PageInfoDto pageInfo,
 
         @Schema(description = "코스 목록")
-        List<CourseResponseDto> courses
+        List<CourseListItemResponseDto> courses
 ) {
 }
