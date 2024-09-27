@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface CompletedCourseRepository extends JpaRepository<CompletedCourse, Long> {
-    @Query("select cc from CompletedCourse cc join fetch cc.course where cc.user = :user")
+    @Query("select cc from CompletedCourse cc "
+            + "join fetch cc.course "
+            + "left join fetch cc.reviewImageList rIL "
+            + "where cc.user = :user")
     List<CompletedCourse> findByUser(@Param("user") User user);
 }

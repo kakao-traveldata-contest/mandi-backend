@@ -1,26 +1,29 @@
 package com.tourapi.mandi.domain.course.util;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.tourapi.mandi.domain.course.dto.CompletedCourseDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
+import com.tourapi.mandi.domain.course.dto.ReviewImageDto;
 import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
+import com.tourapi.mandi.domain.course.entity.ReviewImage;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ReviewMapper {
     public static ReviewDto toReviewDto(CompletedCourse completedCourse) {
         CompletedCourseDto completedCourseDto = CompletedCourseMapper.toCompletedCourseDto(completedCourse);
+        List<ReviewImageDto> reviewImageList = completedCourse.getReviewImageList().stream()
+                .map(ReviewMapper::toReviewImageDto)
+                .toList();
 
         return ReviewDto.builder()
                 .completedCourse(completedCourseDto)
                 .isReviewed(completedCourse.getIsReviewed())
                 .content(completedCourse.getReviewContent())
                 .score(completedCourse.getReviewScore())
+                .imageUrlList(reviewImageList)
                 .reviewedAt(DateTimeUtil.formatDate(completedCourse.getReviewedAt()))
                 .build();
     }
@@ -36,6 +39,12 @@ public final class ReviewMapper {
                 .totalReviewCount(totalReviewCount)
                 .reviewedCourses(reviewedCourses)
                 .notReviewedCourses(notReviewedCourses)
+                .build();
+    }
+
+    private static ReviewImageDto toReviewImageDto(ReviewImage reviewImage) {
+        return ReviewImageDto.builder()
+                .url(reviewImage.getUrl())
                 .build();
     }
 }

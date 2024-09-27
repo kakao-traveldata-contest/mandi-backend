@@ -198,6 +198,22 @@ VALUES (1, 3, 1, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c19
        (6, 4, 6, 4.0, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -72, now()), now(), now(), now())
 ;
 
+INSERT INTO review_image_tb(review_image_id, completed_course_id, url)
+VALUES (1, 1, '1_image_1'),
+       (2, 1, '1_image_2'),
+       (3, 1, '1_image_3'),
+       (4, 1, '1_image_4'),
+       (5, 1, '1_image_5'),
+       (6, 2, '2_image_1'),
+       (7, 2, '2_image_2'),
+       (8, 4, '4_image_1'),
+       (9, 4, '4_image_2'),
+       (10, 4, '4_image_3'),
+       (11, 5, '5_image_1'),
+       (12, 5, '5_image_2'),
+       (13, 5, '5_image_3')
+;
+
 -- 기본 댓글 (parent_comment_id가 NULL)
 INSERT INTO comment_tb (post_id, parent_comment_id, user_id, content, like_cnt, created_at, last_modified_at)
 VALUES
