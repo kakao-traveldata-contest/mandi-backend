@@ -3,11 +3,14 @@ package com.tourapi.mandi.domain.course.repository;
 import static com.tourapi.mandi.domain.course.entity.QCourse.course;
 
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
+import com.tourapi.mandi.domain.course.entity.Coordinate;
 import com.tourapi.mandi.domain.course.entity.Course;
 import com.tourapi.mandi.domain.course.entity.DifficultyLevel;
+import com.tourapi.mandi.domain.course.entity.QCoordinate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +22,23 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     private static final String DESC = "DESC";
 
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<Course> findCoursesInBound(final Coordinate ne, final Coordinate sw) {
+        return jpaQueryFactory.selectFrom(course)
+                .where(course.isNotNull().andAnyOf(
+                                pointInBound(course.midPoint, ne, sw),
+                                pointInBound(course.startPoint.coordinate, ne, sw),
+                                pointInBound(course.endPoint.coordinate, ne, sw)
+                        )
+                )
+                .fetch();
+    }
+
+    private Predicate pointInBound(final QCoordinate point, Coordinate ne, Coordinate sw) {
+        return point.latitude.between(sw.getLatitude(), ne.getLatitude())
+                .and(point.longitude.between(sw.getLongitude(), ne.getLongitude()));
+    }
 
     @Override
     public Page<Course> findCoursesBySearch(CourseSearchDto courseSearch) {

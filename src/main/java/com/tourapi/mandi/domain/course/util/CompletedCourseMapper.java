@@ -3,6 +3,7 @@ package com.tourapi.mandi.domain.course.util;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseDto;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
+import java.time.Duration;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -12,11 +13,15 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CompletedCourseMapper {
     public static CompletedCourseDto toCompletedCourseDto(CompletedCourse completedCourse) {
+        Duration duration = Duration.between(completedCourse.getStartedAt(), completedCourse.getCompletedAt());
+
         return CompletedCourseDto.builder()
                 .id(completedCourse.getCompletedCourseId())
                 .courseName(completedCourse.getCourse().getName())
-                .distance(completedCourse.getCourse().getDistance())
-                .completedAt(completedCourse.getCreatedAt())
+                .duration(DateTimeUtil.formatDuration(duration))
+                .distance(completedCourse.getDistance())
+                .trekkingPathImageUrl(completedCourse.getTrekkingPathImageUrl())
+                .completedAt(DateTimeUtil.formatDate(completedCourse.getCompletedAt()))
                 .build();
     }
 

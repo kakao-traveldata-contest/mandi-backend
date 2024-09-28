@@ -9,14 +9,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "배지 API 목록")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/badges")
@@ -32,6 +33,7 @@ public class BadgeController {
             @Parameter(description = "사용자 ID", required = true)
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        log.info("배지 목록 조회 호출 | parameter = {}", userDetails);
         return ResponseEntity.ok(ApiUtils.success(badgeService.getUserBadges(userDetails.user())));
     }
 }
