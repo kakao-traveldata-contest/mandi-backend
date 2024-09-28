@@ -94,4 +94,14 @@ public class OpenAPIConfig {
                 .pathsToMatch("/comments/**")
                 .build();
     }
+
+
+
+    @Bean
+    public GroupedOpenApi trekkingOpenApi() {
+        return GroupedOpenApi.builder()
+            .group("트레킹 API")
+            .pathsToMatch("/trekking/**")
+            .build();
+    }
 }

@@ -5,6 +5,7 @@ import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyRequestDto;
+import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
 import com.tourapi.mandi.domain.course.dto.CreateReviewRequestDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
@@ -49,6 +50,14 @@ public class CourseController {
     ) {
         log.info("코스 목록 조회 호출 | parameter = {}", courseSearch);
         return ResponseEntity.ok(ApiUtils.success(courseService.findBySearch(courseSearch)));
+    }
+
+    @Operation(summary = "상세 코스 조회")
+    @ApiResponse(responseCode = "200", description = "코스 조회 성공")
+    @GetMapping("/{courseId}")
+    public ResponseEntity<ApiResult<CourseResponseDto>> findCourse(@PathVariable Long courseId) {
+        log.info("상세 코스 조회 호출 | parameter = {}", courseId);
+        return ResponseEntity.ok(ApiUtils.success(courseService.getCourseById(courseId)));
     }
 
     @Operation(summary = "코스 이름 목록 조회")

@@ -4,6 +4,7 @@ import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,12 @@ public class UserBadge extends AuditingEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id")
     private Badge badge;
+
+    @Builder
+    public UserBadge(Badge badge, User user) {
+        this.user = user;
+        this.badge = badge;
+    }
 
     @Override
     public boolean equals(Object obj) {
