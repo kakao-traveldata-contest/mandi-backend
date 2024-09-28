@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
 
-public record CreateReviewRequestDto(
+public record ReviewCreateRequestDto(
         @Pattern(regexp = "^(?!\\s*$).+", message = "후기 내용은 공백 이외의 문자로 입력해야 합니다.")
         @Schema(description = "후기 내용")
         String content,
