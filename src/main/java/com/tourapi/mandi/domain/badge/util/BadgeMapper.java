@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class BadgeMapper {
 
-    private static final String DEFAULT_IMG_URL = "DEFAULT_IMG_URL";
+    private static final String DEFAULT_IMG_URL = "https://mandi-courses.s3.ap-northeast-2.amazonaws.com/badge_default.png";
 
     public static BadgeResponseDto toBadgeResponseDto(Badge badge, boolean isObtained) {
         BadgeResponseDto.BadgeResponseDtoBuilder badgeBuilder = BadgeResponseDto.builder()
