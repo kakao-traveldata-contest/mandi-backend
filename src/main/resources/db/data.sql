@@ -209,9 +209,9 @@ VALUES (1, 1, '1_image_1'),
        (8, 4, '4_image_1'),
        (9, 4, '4_image_2'),
        (10, 4, '4_image_3'),
-       (11, 5, '5_image_1'),
-       (12, 5, '5_image_2'),
-       (13, 5, '5_image_3')
+       (11, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (12, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (13, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19')
 ;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
