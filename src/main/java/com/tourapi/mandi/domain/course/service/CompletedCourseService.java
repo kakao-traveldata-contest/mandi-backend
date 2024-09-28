@@ -118,4 +118,12 @@ public class CompletedCourseService  {
                 .map(s3ImageClient::base64ImageToS3)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public double getDistanceTotal(User user) {
+        return completedCourseRepository.findByUser(userService.getExistingUser(user))
+            .stream()
+            .mapToDouble(course -> course.getDistance().doubleValue())
+            .sum();
+    }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,6 +68,23 @@ public class CompletedCourse extends AuditingEntity {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime reviewedAt;
+
+
+    @Builder(builderMethodName = "notReviewedBuilder")
+    public CompletedCourse(User user,
+        Course course,
+        LocalDateTime startedAt,
+        LocalDateTime completedAt
+    ) {
+        this.user = user;
+        this.course = course;
+        this.distance = course.getDistance();
+        this.trekkingPathImageUrl = course.getImgUrl();
+        this.startedAt = startedAt;
+        this.completedAt = completedAt;
+        this.isReviewed = false;
+        this.reviewScore = 0;
+    }
 
     @Override
     public boolean equals(Object obj) {

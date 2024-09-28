@@ -4,6 +4,8 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tourapi.mandi.domain.badge.entity.BadgeType;
+import com.tourapi.mandi.domain.badge.service.BadgeService;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
 import com.tourapi.mandi.domain.user.dto.ReissueDto;
@@ -39,6 +41,8 @@ public class UserService {
     private final UserJpaRepository userJpaRepository;
     private final TokenService tokenService;
     private final BlackListTokenService blackListTokenService;
+    private final BadgeService badgeService;
+
     private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
 
 //해당 메서드가 호출된다는거 자체가, refreshtoken까지 만료되었거나, 아예 기존  토큰들이 프론트의 로컬스토리지에서 다지워서 새로 받아야 하거나,
@@ -64,14 +68,15 @@ public class UserService {
 
     public LoginResponseDto socialSignup(OauthUserInfo userInfo, SignupRequestDto signupRequestDto) {
         //유저 정보만들고
-            User user = UserMapper.toUserFromSignupRequestDto(signupRequestDto, defaultImageUrl, passwordEncoder, userInfo);
-            userJpaRepository.save(user);
+        User user = UserMapper.toUserFromSignupRequestDto(signupRequestDto, defaultImageUrl, passwordEncoder, userInfo);
+        userJpaRepository.save(user);
+
         //토큰 만들어서 리턴
         String refreshToken = JwtProvider.createRefreshToken(user);
         String accessToken = JwtProvider.create(user);
 
         tokenService.save(refreshToken, accessToken, user);
-
+        badgeService.saveBadge(BadgeType.MANDI_STARTER, user);
         return LoginMapper.toLoginResponseDto(refreshToken,accessToken,true);
     }
 

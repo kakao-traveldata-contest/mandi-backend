@@ -70,4 +70,12 @@ public class Course extends AuditingEntity {
             @AttributeOverride(name = "coordinate.longitude", column = @Column(name = "end_longitude"))
     })
     private Location endPoint;
+
+    public Coordinate getStartLocationCoordinate() {
+        return startPoint.getCoordinate();
+    }
+
+    public Coordinate getEndLocationCoordinate() {
+        return endPoint.getCoordinate();
+    }
 }

@@ -1,12 +1,16 @@
 package com.tourapi.mandi.domain.course.service;
 
+import com.tourapi.mandi.domain.course.CourseExceptionStatus;
 import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyRequestDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
+import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
+import com.tourapi.mandi.domain.course.entity.Course;
 import com.tourapi.mandi.domain.course.repository.CourseRepository;
 import com.tourapi.mandi.domain.course.util.CourseMapper;
+import com.tourapi.mandi.global.exception.Exception404;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,5 +33,14 @@ public class CourseService {
 
     public CourseNearbyListResponseDto findCoursesInBound(CourseNearbyRequestDto request) {
         return CourseMapper.toCourseNearbyResponseDto(courseRepository.findCoursesInBound(request.ne(), request.sw()));
+    }
+
+    public CourseResponseDto getCourseById(Long courseId) {
+        return CourseMapper.toCourseResponseDto(findCourseById(courseId));
+    }
+
+    private Course findCourseById(Long courseId) {
+        return courseRepository.findById(courseId)
+            .orElseThrow(() -> new Exception404(CourseExceptionStatus.COURSE_NOT_FOUND));
     }
 }
