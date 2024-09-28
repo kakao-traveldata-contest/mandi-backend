@@ -1,16 +1,17 @@
 package com.tourapi.mandi.domain.trekking.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tourapi.mandi.domain.badge.entity.BadgeType;
+import com.tourapi.mandi.domain.badge.service.BadgeService;
 import com.tourapi.mandi.domain.course.CourseExceptionStatus;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
 import com.tourapi.mandi.domain.course.entity.Coordinate;
 import com.tourapi.mandi.domain.course.entity.Course;
 import com.tourapi.mandi.domain.course.repository.CompletedCourseRepository;
 import com.tourapi.mandi.domain.course.repository.CourseRepository;
+import com.tourapi.mandi.domain.course.service.CompletedCourseService;
 import com.tourapi.mandi.domain.trekking.TrekkingSessionExceptionStatus;
 import com.tourapi.mandi.domain.trekking.dto.TrekkingFinishRequestDto;
 import com.tourapi.mandi.domain.trekking.dto.TrekkingStartResponseDto;
@@ -34,6 +35,9 @@ public class TrekkingService {
 	private final CourseRepository courseRepository;
 	private final TrekkingSessionRepository trekkingSessionRepository;
 	private final CompletedCourseRepository completedCourseRepository;
+
+	private final CompletedCourseService completedCourseService;
+	private final BadgeService badgeService;
 
 	public TrekkingStartResponseDto findTrekkingStatus(
 		User user,
@@ -95,6 +99,19 @@ public class TrekkingService {
 				.startedAt(trekkingSession.getStartedAt())
 				.completedAt(request.completedAt())
 				.build();
+
+			// 뱃지 취득
+			double prevDistance = completedCourseService.getDistanceTotal(user);
+			double currDistance = course.getDistance().doubleValue();
+
+			// 첫 번째 완주인 경우
+			if (prevDistance == 0) {
+				badgeService.saveBadge(BadgeType.BEGINNING_OF_COMPLETION, user);
+			}
+			// 8km 이상일 경우
+			if (prevDistance + currDistance >= 8) {
+				badgeService.saveBadge(BadgeType.WALKED_10000_STEPS, user);
+			}
 
 			// 트레킹 세션 종료
 			completedCourseRepository.save(completedCourse);

@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,5 +66,13 @@ public class CompletedCourseService  {
                 reviewedDtos,
                 completedCourseDtos
         );
+    }
+
+    @Transactional(readOnly = true)
+    public double getDistanceTotal(User user) {
+        return completedCourseRepository.findByUser(userService.getExistingUser(user))
+            .stream()
+            .mapToDouble(course -> course.getDistance().doubleValue())
+            .sum();
     }
 }
