@@ -1,12 +1,18 @@
 package com.tourapi.mandi.domain.trekking.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tourapi.mandi.domain.course.CourseExceptionStatus;
+import com.tourapi.mandi.domain.course.entity.CompletedCourse;
 import com.tourapi.mandi.domain.course.entity.Coordinate;
 import com.tourapi.mandi.domain.course.entity.Course;
+import com.tourapi.mandi.domain.course.repository.CompletedCourseRepository;
 import com.tourapi.mandi.domain.course.repository.CourseRepository;
+import com.tourapi.mandi.domain.trekking.TrekkingSessionExceptionStatus;
+import com.tourapi.mandi.domain.trekking.dto.TrekkingFinishRequestDto;
 import com.tourapi.mandi.domain.trekking.dto.TrekkingStartResponseDto;
 import com.tourapi.mandi.domain.trekking.entity.TrekkingSession;
 import com.tourapi.mandi.domain.trekking.repository.TrekkingSessionRepository;
@@ -25,8 +31,9 @@ import lombok.RequiredArgsConstructor;
 public class TrekkingService {
 
 	private final UserJpaRepository userJpaRepository;
-	private final TrekkingSessionRepository sessionRepository;
 	private final CourseRepository courseRepository;
+	private final TrekkingSessionRepository trekkingSessionRepository;
+	private final CompletedCourseRepository completedCourseRepository;
 
 	public TrekkingStartResponseDto findTrekkingStatus(
 		User user,
@@ -54,21 +61,64 @@ public class TrekkingService {
 		// 코스 시작 지점에 인접해 있는 경우
 		if (LocationUtil.isWithin100Meters(userLocation, course.getStartLocationCoordinate())) {
 			sessionBuilder.startPoint(course.getStartLocationCoordinate());
-			sessionRepository.save(sessionBuilder.build());
+			trekkingSessionRepository.save(sessionBuilder.build());
 			return true;
 		}
 
 		// 코스 끝 지점에 인접해 있는 경우
 		if (LocationUtil.isWithin100Meters(userLocation, course.getEndLocationCoordinate())) {
 			sessionBuilder.startPoint(course.getEndLocationCoordinate());
-			sessionRepository.save(sessionBuilder.build());
+			trekkingSessionRepository.save(sessionBuilder.build());
 			return true;
 		}
 		return false;
 	}
 
+	public TrekkingStartResponseDto isTrekkingFinished(
+		User user,
+		Long courseId,
+		TrekkingFinishRequestDto request
+	) {
+		if (!userJpaRepository.existsById(user.getUserId())) {
+			throw new Exception404(UserExceptionStatus.USER_NOT_FOUND);
+		}
+		Course course = getCourseById(courseId);
+		TrekkingSession trekkingSession = findSession(user, courseId);
+
+		if (isTrekkingFinished(request, course, trekkingSession.getStartedAt())) {
+			// 완주 코스에 추가
+			CompletedCourse completedCourse = CompletedCourse.notReviewedBuilder()
+				.user(user)
+				.course(course)
+				.startedAt(trekkingSession.getStartedAt())
+				.completedAt(request.completedAt())
+				.build();
+
+			// 트레킹 세션 종료
+			completedCourseRepository.save(completedCourse);
+			trekkingSessionRepository.delete(trekkingSession);
+			return TrekkingMapper.mapToTrekkingStartSuccessResponseDto();
+		}
+		return TrekkingMapper.mapToTrekkingStartFailResponseDto();
+	}
+
 	private Course getCourseById(Long courseId) {
 		return courseRepository.findById(courseId)
 			.orElseThrow(() -> new Exception404(CourseExceptionStatus.COURSE_NOT_FOUND));
+	}
+
+	private TrekkingSession findSession(User user, Long courseId) {
+		return trekkingSessionRepository.findById(getKey(user.getUserId(), courseId))
+			.orElseThrow(() -> new Exception404(TrekkingSessionExceptionStatus.TREKKING_NOT_FOUND));
+	}
+
+	private String getKey(Long userId, Long courseId) {
+		return "Trekking-session-" + userId + "-" + courseId;
+	}
+
+	private boolean isTrekkingFinished(TrekkingFinishRequestDto request, Course course, LocalDateTime startedAt) {
+		// 사용자의 현재 위치가 끝 지점과 100m 이하로 인접해 있는 경우 && 종료 시간이 시작 시간보다 선행되는 경우
+		return LocationUtil.isWithin100Meters(request.userLocation(), course.getEndLocationCoordinate())
+			&& request.completedAt().isAfter(startedAt);
 	}
 }

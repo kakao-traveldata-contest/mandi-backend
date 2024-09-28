@@ -1,5 +1,6 @@
 package com.tourapi.mandi.domain.trekking.entity;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -7,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.tourapi.mandi.domain.course.entity.Coordinate;
 
@@ -31,12 +33,16 @@ public class TrekkingSession {
 	@TimeToLive(unit = TimeUnit.HOURS)
 	private Long expirationHours = 12L;
 
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	private LocalDateTime startedAt;
+
 	@Builder
 	public TrekkingSession(Long userId,  Long courseId, Coordinate startPoint) {
 		this.sessionId = "Trekking-session-" + userId + "-" + courseId;
 		this.userId = userId;
 		this.courseId = courseId;
 		this.startPoint = startPoint;
+		this.startedAt = LocalDateTime.now();
 	}
 
 	@Override
