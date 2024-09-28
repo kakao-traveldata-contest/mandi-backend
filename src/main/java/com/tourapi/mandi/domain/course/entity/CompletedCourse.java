@@ -114,6 +114,14 @@ public class CompletedCourse extends AuditingEntity {
         updateReview(reviewContent, reviewScore, reviewImages);
     }
 
+    public void deleteReview() {
+        this.isReviewed = false;
+        this.reviewContent = null;
+        this.reviewScore = null;
+        this.reviewImageList.clear();
+        this.reviewedAt = null;
+    }
+
     private void updateReview(String reviewContent, Integer reviewScore, List<ReviewImage> reviewImages) {
         Optional.ofNullable(reviewScore).ifPresent(score -> this.reviewScore = score);
         Optional.ofNullable(reviewContent).ifPresent(contents -> this.reviewContent = contents);

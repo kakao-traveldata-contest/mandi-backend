@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -122,5 +122,21 @@ public class CourseController {
         );
 
         return ResponseEntity.ok(ApiUtils.success(reviewDto));
+    }
+
+    @Operation(summary = "후기 삭제")
+    @ApiResponse(responseCode = "200", description = "후기 삭제 성공")
+    @ApiResponse(responseCode = "403", description = "권한 없는 사용자 요청 에러")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 코스 완주 기록 에러")
+    @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
+    @DeleteMapping("/completed/{completedCourseId}/review")
+    public ResponseEntity<ApiResult<Boolean>> deleteReview(
+            @PathVariable Long completedCourseId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiUtils.success(completedCourseService.deleteReview(
+                completedCourseId,
+                userDetails.user()
+        )));
     }
 }
