@@ -61,6 +61,7 @@ public class TrekkingService {
 		// 코스 시작 지점에 인접해 있는 경우
 		if (LocationUtil.isWithin100Meters(userLocation, course.getStartLocationCoordinate())) {
 			sessionBuilder.startPoint(course.getStartLocationCoordinate());
+			sessionBuilder.endPoint(course.getEndLocationCoordinate());
 			trekkingSessionRepository.save(sessionBuilder.build());
 			return true;
 		}
@@ -68,6 +69,7 @@ public class TrekkingService {
 		// 코스 끝 지점에 인접해 있는 경우
 		if (LocationUtil.isWithin100Meters(userLocation, course.getEndLocationCoordinate())) {
 			sessionBuilder.startPoint(course.getEndLocationCoordinate());
+			sessionBuilder.endPoint(course.getStartLocationCoordinate());
 			trekkingSessionRepository.save(sessionBuilder.build());
 			return true;
 		}
@@ -85,7 +87,7 @@ public class TrekkingService {
 		Course course = getCourseById(courseId);
 		TrekkingSession trekkingSession = findSession(user, courseId);
 
-		if (isTrekkingFinished(request, course, trekkingSession.getStartedAt())) {
+		if (isTrekkingFinished(request, trekkingSession)) {
 			// 완주 코스에 추가
 			CompletedCourse completedCourse = CompletedCourse.notReviewedBuilder()
 				.user(user)
@@ -116,9 +118,9 @@ public class TrekkingService {
 		return "Trekking-session-" + userId + "-" + courseId;
 	}
 
-	private boolean isTrekkingFinished(TrekkingFinishRequestDto request, Course course, LocalDateTime startedAt) {
+	private boolean isTrekkingFinished(TrekkingFinishRequestDto request, TrekkingSession session) {
 		// 사용자의 현재 위치가 끝 지점과 100m 이하로 인접해 있는 경우 && 종료 시간이 시작 시간보다 선행되는 경우
-		return LocationUtil.isWithin100Meters(request.userLocation(), course.getEndLocationCoordinate())
-			&& request.completedAt().isAfter(startedAt);
+		return LocationUtil.isWithin100Meters(request.userLocation(), session.getEndPoint())
+			&& request.completedAt().isAfter(session.getStartedAt());
 	}
 }

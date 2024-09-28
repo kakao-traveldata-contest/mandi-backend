@@ -30,6 +30,8 @@ public class TrekkingSession {
 
 	private Coordinate startPoint;
 
+	private Coordinate endPoint;
+
 	@TimeToLive(unit = TimeUnit.HOURS)
 	private Long expirationHours = 12L;
 
@@ -37,11 +39,12 @@ public class TrekkingSession {
 	private LocalDateTime startedAt;
 
 	@Builder
-	public TrekkingSession(Long userId,  Long courseId, Coordinate startPoint) {
+	public TrekkingSession(Long userId,  Long courseId, Coordinate startPoint, Coordinate endPoint) {
 		this.sessionId = "Trekking-session-" + userId + "-" + courseId;
 		this.userId = userId;
 		this.courseId = courseId;
 		this.startPoint = startPoint;
+		this.endPoint = endPoint;
 		this.startedAt = LocalDateTime.now();
 	}
 
