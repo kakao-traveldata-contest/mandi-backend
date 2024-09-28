@@ -1,5 +1,6 @@
 package com.tourapi.mandi.domain.course.service;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 import com.tourapi.mandi.domain.course.CourseExceptionStatus;
@@ -24,9 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompletedCourseService  {
@@ -111,6 +114,28 @@ public class CompletedCourseService  {
         );
 
         return ReviewMapper.toReviewDto(completedCourse);
+    }
+
+    @Transactional
+    public Boolean deleteReview(Long completedCourseId, User user) {
+        User existingUser = userService.getExistingUser(user);
+
+        CompletedCourse completedCourse = completedCourseRepository.findById(completedCourseId)
+                .orElseThrow(() -> new Exception404(CourseExceptionStatus.COMPLETED_COURSE_NOT_FOUND));
+
+        if (!completedCourse.getUser().getUserId().equals(existingUser.getUserId())) {
+            throw new Exception403(CourseExceptionStatus.USER_NOT_AUTHORIZED);
+        }
+
+        if (completedCourse.getIsReviewed().equals(FALSE)) {
+            throw new Exception409(CourseExceptionStatus.REVIEW_NOT_FOUND);
+        }
+
+        completedCourse.getReviewImageList().forEach(reviewImage -> s3ImageClient.deleteImageFromS3(reviewImage.getUrl()));
+
+        completedCourse.deleteReview();
+
+        return true;
     }
 
     private List<String> uploadReviewImages(List<String> base64EncodedImageList) {
