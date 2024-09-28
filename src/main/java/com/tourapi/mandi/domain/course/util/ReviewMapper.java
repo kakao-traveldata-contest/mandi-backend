@@ -42,6 +42,13 @@ public final class ReviewMapper {
                 .build();
     }
 
+    public static ReviewImage toReviewImage(String url, CompletedCourse completedCourse) {
+        return ReviewImage.builder()
+                .completedCourse(completedCourse)
+                .url(url)
+                .build();
+    }
+
     private static ReviewImageDto toReviewImageDto(ReviewImage reviewImage) {
         return ReviewImageDto.builder()
                 .url(reviewImage.getUrl())
