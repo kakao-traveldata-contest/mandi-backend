@@ -23,6 +23,26 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserJpaRepository userJpaRepository;
 
+
+
+    public boolean createComment(Long commentId, User user) {
+        // 게시글 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new Exception404(CommentExceptionStatus.COMMENT_NOT_FOUND));
+
+
+        //유저만 좋아요 가능
+        userJpaRepository.findById(user.getUserId())
+                .orElseThrow(() -> new Exception404(UserExceptionStatus.USER_NOT_FOUND));
+
+        // 좋아요 수 증가
+        comment.setLikeCnt(comment.getLikeCnt() + 1);
+
+
+        return true;
+    }
+
+
     // 좋아요 추가
     public boolean addLike(Long commentId, User user) {
         // 게시글 조회

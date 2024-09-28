@@ -159,6 +159,7 @@ public final class PostMapper {
                 .likeCnt(comment.getLikeCnt())  // 좋아요 수
                 .user(toUserDto(comment.getUser()))
                 .uploadDate(comment.getCreatedAt())
+                .isDeleted(comment.isDeleted())
                 .childComments(comment.getChildComments().stream()
                         .map(PostMapper::toCommentDto)
                         .toList())  // 자식 댓글 리스트
