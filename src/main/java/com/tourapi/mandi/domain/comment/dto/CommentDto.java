@@ -16,6 +16,7 @@ public record CommentDto(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
         LocalDateTime uploadDate,
         String content,
+        boolean isDeleted,
         int likeCnt
 ) {
 

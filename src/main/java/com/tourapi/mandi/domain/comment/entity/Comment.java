@@ -44,4 +44,9 @@ public class Comment extends AuditingEntity {
     @Column(name = "like_cnt", nullable = false)
     @Setter
     private int likeCnt;  // 좋아요 수
+
+
+    @Column(name = "is_deleted", nullable = false)
+    @Setter
+    private boolean isDeleted;
 }
