@@ -195,7 +195,11 @@ VALUES (1, 3, 1, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c19
        (3, 3, 3, 2.7, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -84, now()), now(), now(), now()),
        (4, 4, 4, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good', 5, now(), DATEADD('MINUTE', -27, now()), now(), now(), now()),
        (5, 4, 5, 1.23, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
-       (6, 4, 6, 4.0, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -72, now()), now(), now(), now())
+       (6, 4, 6, 4.0, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -72, now()), now(), now(), now()),
+       (7, 6, 9, 2.2, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice',
+        3, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
+       (8, 6, 10, 1.35, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null,
+        null, null, DATEADD('MINUTE', -72, now()), now(), now(), now())
 ;
 
 INSERT INTO review_image_tb(review_image_id, completed_course_id, url)
@@ -211,7 +215,9 @@ VALUES (1, 1, '1_image_1'),
        (10, 4, '4_image_3'),
        (11, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
        (12, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (13, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19')
+       (13, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (14, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (15, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19')
 ;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
