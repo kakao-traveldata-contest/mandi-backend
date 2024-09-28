@@ -112,20 +112,24 @@ public class CompletedCourse extends AuditingEntity {
     ) {
         this.isReviewed = true;
         updateReview(reviewContent, reviewScore, reviewImages);
+        this.reviewedAt = LocalDateTime.now();
+    }
+
+    public void updateReview(String reviewContent, Integer reviewScore, List<ReviewImage> reviewImages) {
+        Optional.ofNullable(reviewScore).ifPresent(score -> this.reviewScore = score);
+        Optional.ofNullable(reviewContent).ifPresent(contents -> this.reviewContent = contents);
+        Optional.ofNullable(reviewImages).ifPresent(images -> this.reviewImageList.addAll(images));
     }
 
     public void deleteReview() {
         this.isReviewed = false;
         this.reviewContent = null;
         this.reviewScore = null;
-        this.reviewImageList.clear();
+        deleteReviewImages();
         this.reviewedAt = null;
     }
 
-    private void updateReview(String reviewContent, Integer reviewScore, List<ReviewImage> reviewImages) {
-        Optional.ofNullable(reviewScore).ifPresent(score -> this.reviewScore = score);
-        Optional.ofNullable(reviewContent).ifPresent(contents -> this.reviewContent = contents);
-        Optional.ofNullable(reviewImages).ifPresent(images -> this.reviewImageList.addAll(images));
-        this.reviewedAt = LocalDateTime.now();
+    public void deleteReviewImages() {
+        this.reviewImageList.clear();
     }
 }
