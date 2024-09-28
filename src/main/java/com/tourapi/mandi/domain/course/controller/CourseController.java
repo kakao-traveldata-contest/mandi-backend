@@ -7,9 +7,10 @@ import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyRequestDto;
 import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
-import com.tourapi.mandi.domain.course.dto.CreateReviewRequestDto;
+import com.tourapi.mandi.domain.course.dto.ReviewCreateRequestDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
 import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
+import com.tourapi.mandi.domain.course.dto.ReviewUpdateRequestDto;
 import com.tourapi.mandi.domain.course.service.CompletedCourseService;
 import com.tourapi.mandi.domain.course.service.CourseService;
 import com.tourapi.mandi.global.security.CustomUserDetails;
@@ -27,6 +28,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -112,13 +114,13 @@ public class CourseController {
     @PostMapping("/completed/{completedCourseId}/review")
     public ResponseEntity<ApiResult<ReviewDto>> createReview(
             @PathVariable Long completedCourseId,
-            @Valid @RequestBody CreateReviewRequestDto createReviewRequestDto,
+            @Valid @RequestBody ReviewCreateRequestDto reviewCreateRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         ReviewDto reviewDto = completedCourseService.createReview(
                 completedCourseId,
                 userDetails.user(),
-                createReviewRequestDto
+                reviewCreateRequestDto
         );
 
         return ResponseEntity.ok(ApiUtils.success(reviewDto));
@@ -128,6 +130,7 @@ public class CourseController {
     @ApiResponse(responseCode = "200", description = "후기 삭제 성공")
     @ApiResponse(responseCode = "403", description = "권한 없는 사용자 요청 에러")
     @ApiResponse(responseCode = "404", description = "존재하지 않는 코스 완주 기록 에러")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 후기 에러")
     @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
     @DeleteMapping("/completed/{completedCourseId}/review")
     public ResponseEntity<ApiResult<Boolean>> deleteReview(
@@ -137,6 +140,26 @@ public class CourseController {
         return ResponseEntity.ok(ApiUtils.success(completedCourseService.deleteReview(
                 completedCourseId,
                 userDetails.user()
+        )));
+    }
+
+    @Operation(summary = "후기 수정")
+    @ApiResponse(responseCode = "200", description = "후기 수정 성공")
+    @ApiResponse(responseCode = "400", description = "S3 이미지 생성 에러")
+    @ApiResponse(responseCode = "403", description = "권한 없는 사용자 요청 에러")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 코스 완주 기록 에러")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 후기 에러")
+    @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
+    @PatchMapping("/completed/{completedCourseId}/review")
+    public ResponseEntity<ApiResult<ReviewDto>> updateReview(
+            @PathVariable Long completedCourseId,
+            @Valid @RequestBody ReviewUpdateRequestDto reviewUpdateRequestDto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiUtils.success(completedCourseService.updateReview(
+                completedCourseId,
+                userDetails.user(),
+                reviewUpdateRequestDto
         )));
     }
 }

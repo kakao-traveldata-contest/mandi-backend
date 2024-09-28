@@ -6,9 +6,10 @@ import static java.lang.Boolean.TRUE;
 import com.tourapi.mandi.domain.course.CourseExceptionStatus;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseDto;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
-import com.tourapi.mandi.domain.course.dto.CreateReviewRequestDto;
+import com.tourapi.mandi.domain.course.dto.ReviewCreateRequestDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
 import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
+import com.tourapi.mandi.domain.course.dto.ReviewUpdateRequestDto;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
 import com.tourapi.mandi.domain.course.entity.ReviewImage;
 import com.tourapi.mandi.domain.course.repository.CompletedCourseRepository;
@@ -83,22 +84,15 @@ public class CompletedCourseService  {
     }
 
     @Transactional
-    public ReviewDto createReview(Long completedCourseId, User user, CreateReviewRequestDto createReviewRequestDto) {
-        User existingUser = userService.getExistingUser(user);
-
-        CompletedCourse completedCourse = completedCourseRepository.findById(completedCourseId)
-                .orElseThrow(() -> new Exception404(CourseExceptionStatus.COMPLETED_COURSE_NOT_FOUND));
-
-        if (!completedCourse.getUser().getUserId().equals(existingUser.getUserId())) {
-            throw new Exception403(CourseExceptionStatus.USER_NOT_AUTHORIZED);
-        }
+    public ReviewDto createReview(Long completedCourseId, User user, ReviewCreateRequestDto reviewCreateRequestDto) {
+        CompletedCourse completedCourse = getValidatedCompletedCourseOfUser(user, completedCourseId);
 
         if (completedCourse.getIsReviewed().equals(TRUE)) {
             throw new Exception409(CourseExceptionStatus.REVIEW_ALREADY_EXISTS);
         }
 
         List<ReviewImage> reviewImages = new ArrayList<>();
-        Optional.ofNullable(createReviewRequestDto.base64EncodedImageList())
+        Optional.ofNullable(reviewCreateRequestDto.base64EncodedImageList())
                 .ifPresent(images -> {
                     List<String> imageUrls = uploadReviewImages(images);
 
@@ -108,8 +102,8 @@ public class CompletedCourseService  {
                 });
 
         completedCourse.addReview(
-                createReviewRequestDto.content(),
-                createReviewRequestDto.score(),
+                reviewCreateRequestDto.content(),
+                reviewCreateRequestDto.score(),
                 reviewImages
         );
 
@@ -118,18 +112,7 @@ public class CompletedCourseService  {
 
     @Transactional
     public Boolean deleteReview(Long completedCourseId, User user) {
-        User existingUser = userService.getExistingUser(user);
-
-        CompletedCourse completedCourse = completedCourseRepository.findById(completedCourseId)
-                .orElseThrow(() -> new Exception404(CourseExceptionStatus.COMPLETED_COURSE_NOT_FOUND));
-
-        if (!completedCourse.getUser().getUserId().equals(existingUser.getUserId())) {
-            throw new Exception403(CourseExceptionStatus.USER_NOT_AUTHORIZED);
-        }
-
-        if (completedCourse.getIsReviewed().equals(FALSE)) {
-            throw new Exception409(CourseExceptionStatus.REVIEW_NOT_FOUND);
-        }
+        CompletedCourse completedCourse = getValidatedReviewOfUser(user, completedCourseId);
 
         completedCourse.getReviewImageList().forEach(reviewImage -> s3ImageClient.deleteImageFromS3(reviewImage.getUrl()));
 
@@ -138,10 +121,29 @@ public class CompletedCourseService  {
         return true;
     }
 
-    private List<String> uploadReviewImages(List<String> base64EncodedImageList) {
-        return base64EncodedImageList.stream()
-                .map(s3ImageClient::base64ImageToS3)
-                .toList();
+    @Transactional
+    public ReviewDto updateReview(Long completedCourseId, User user, ReviewUpdateRequestDto reviewUpdateRequestDto) {
+        CompletedCourse completedCourse = getValidatedReviewOfUser(user, completedCourseId);
+
+        List<ReviewImage> reviewImages = new ArrayList<>();
+        Optional.ofNullable(reviewUpdateRequestDto.base64EncodedImageList())
+                .ifPresent(images -> {
+                    completedCourse.getReviewImageList().forEach(reviewImage -> s3ImageClient.deleteImageFromS3(reviewImage.getUrl()));
+                    completedCourse.deleteReviewImages();
+
+                    List<String> imageUrls = uploadReviewImages(images);
+                    for (final String imageUrl : imageUrls) {
+                        reviewImages.add(ReviewMapper.toReviewImage(imageUrl, completedCourse));
+                    }
+                });
+
+        completedCourse.updateReview(
+                reviewUpdateRequestDto.content(),
+                reviewUpdateRequestDto.score(),
+                reviewImages
+        );
+
+        return ReviewMapper.toReviewDto(completedCourse);
     }
 
     @Transactional(readOnly = true)
@@ -150,5 +152,34 @@ public class CompletedCourseService  {
             .stream()
             .mapToDouble(course -> course.getDistance().doubleValue())
             .sum();
+    }
+
+    private List<String> uploadReviewImages(List<String> base64EncodedImageList) {
+        return base64EncodedImageList.stream()
+                .map(s3ImageClient::base64ImageToS3)
+                .toList();
+    }
+
+    private CompletedCourse getValidatedReviewOfUser(User user, Long completedCourseId) {
+        CompletedCourse completedCourse = getValidatedCompletedCourseOfUser(user, completedCourseId);
+
+        if (completedCourse.getIsReviewed().equals(FALSE)) {
+            throw new Exception404(CourseExceptionStatus.REVIEW_NOT_FOUND);
+        }
+
+        return completedCourse;
+    }
+
+    private CompletedCourse getValidatedCompletedCourseOfUser(User user, Long completedCourseId) {
+        User existingUser = userService.getExistingUser(user);
+
+        CompletedCourse completedCourse = completedCourseRepository.findByIdJoinFetch(completedCourseId)
+                .orElseThrow(() -> new Exception404(CourseExceptionStatus.COMPLETED_COURSE_NOT_FOUND));
+
+        if (!completedCourse.getUser().getUserId().equals(existingUser.getUserId())) {
+            throw new Exception403(CourseExceptionStatus.USER_NOT_AUTHORIZED);
+        }
+
+        return completedCourse;
     }
 }
