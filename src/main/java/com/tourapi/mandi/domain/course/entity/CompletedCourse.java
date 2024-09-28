@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,6 +58,7 @@ public class CompletedCourse extends AuditingEntity {
     @Column(nullable = false)
     private Boolean isReviewed;
 
+    @Column(length = 700)
     private String reviewContent;
 
     private Integer reviewScore;
@@ -101,5 +103,21 @@ public class CompletedCourse extends AuditingEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getCompletedCourseId());
+    }
+
+    public void addReview(
+            String reviewContent,
+            Integer reviewScore,
+            List<ReviewImage> reviewImages
+    ) {
+        this.isReviewed = true;
+        updateReview(reviewContent, reviewScore, reviewImages);
+    }
+
+    private void updateReview(String reviewContent, Integer reviewScore, List<ReviewImage> reviewImages) {
+        Optional.ofNullable(reviewScore).ifPresent(score -> this.reviewScore = score);
+        Optional.ofNullable(reviewContent).ifPresent(contents -> this.reviewContent = contents);
+        Optional.ofNullable(reviewImages).ifPresent(images -> this.reviewImageList.addAll(images));
+        this.reviewedAt = LocalDateTime.now();
     }
 }
