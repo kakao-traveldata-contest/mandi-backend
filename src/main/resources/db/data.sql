@@ -210,14 +210,14 @@ VALUES (1, 1, '1_image_1'),
        (5, 1, '1_image_5'),
        (6, 2, '2_image_1'),
        (7, 2, '2_image_2'),
-       (8, 4, '4_image_1'),
-       (9, 4, '4_image_2'),
-       (10, 4, '4_image_3'),
+       (8, 4, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/dea964a8-cf01-4288-9da0-f113ebe8beed'),
+       (9, 4, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/dea964a8-cf01-4288-9da0-f113ebe8beed'),
+       (10, 4, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/dea964a8-cf01-4288-9da0-f113ebe8beed'),
        (11, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
        (12, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
        (13, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (14, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (15, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19')
+       (14, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/86b65b9c-533c-4991-9b7d-54a86457e988'),
+       (15, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/86b65b9c-533c-4991-9b7d-54a86457e988')
 ;
 
 -- 기본 댓글 (parent_comment_id가 NULL)
