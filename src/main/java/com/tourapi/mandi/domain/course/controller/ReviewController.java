@@ -1,6 +1,5 @@
 package com.tourapi.mandi.domain.course.controller;
 
-import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.ReviewCreateRequestDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
 import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
@@ -30,26 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "코스 완주 및 후기 API 목록")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/courses/completed")
-public class CompletedCourseController {
+@RequestMapping("/reviews")
+public class ReviewController {
     private final CompletedCourseService completedCourseService;
 
-    @Operation(summary = "완주한 코스 목록 조회")
-    @ApiResponse(responseCode = "200", description = "완주한 코스 목록 조회 성공")
-    @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
-    @GetMapping
-    public ResponseEntity<ApiResult<CompletedCourseListResponseDto>> getCompletedCourses(
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        CompletedCourseListResponseDto responseDto = completedCourseService.getCompletedCourses(userDetails.user());
-
-        return ResponseEntity.ok(ApiUtils.success(responseDto));
-    }
-
-    @Operation(summary = "완주 코스 후기 목록 조회")
+    @Operation(summary = "후기 목록 조회")
     @ApiResponse(responseCode = "200", description = "완주 코스 후기 목록 조회 성공")
     @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
-    @GetMapping("/reviews")
+    @GetMapping
     public ResponseEntity<ApiResult<ReviewListResponseDto>> getReviews(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
@@ -58,21 +45,19 @@ public class CompletedCourseController {
         return ResponseEntity.ok(ApiUtils.success(responseDto));
     }
 
-    @Operation(summary = "완주 코스에 대한 후기 등록")
+    @Operation(summary = "후기 등록")
     @ApiResponse(responseCode = "200", description = "후기 등록 성공")
     @ApiResponse(responseCode = "400", description = "S3 이미지 생성 에러")
     @ApiResponse(responseCode = "403", description = "권한 없는 사용자 요청 에러")
     @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
     @ApiResponse(responseCode = "404", description = "존재하지 않는 코스 완주 기록 에러")
     @ApiResponse(responseCode = "409", description = "후기 중복 등록 요청 에러")
-    @PostMapping("/{completedCourseId}/review")
+    @PostMapping
     public ResponseEntity<ApiResult<ReviewDto>> createReview(
-            @PathVariable Long completedCourseId,
             @Valid @RequestBody ReviewCreateRequestDto reviewCreateRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         ReviewDto reviewDto = completedCourseService.createReview(
-                completedCourseId,
                 userDetails.user(),
                 reviewCreateRequestDto
         );
@@ -86,7 +71,7 @@ public class CompletedCourseController {
     @ApiResponse(responseCode = "404", description = "존재하지 않는 코스 완주 기록 에러")
     @ApiResponse(responseCode = "404", description = "존재하지 않는 후기 에러")
     @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
-    @DeleteMapping("/{completedCourseId}/review")
+    @DeleteMapping("/{completedCourseId}")
     public ResponseEntity<ApiResult<Boolean>> deleteReview(
             @PathVariable Long completedCourseId,
             @AuthenticationPrincipal CustomUserDetails userDetails
@@ -104,7 +89,7 @@ public class CompletedCourseController {
     @ApiResponse(responseCode = "404", description = "존재하지 않는 코스 완주 기록 에러")
     @ApiResponse(responseCode = "404", description = "존재하지 않는 후기 에러")
     @ApiResponse(responseCode = "500", description = "S3 이미지 삭제 에러")
-    @PatchMapping("/{completedCourseId}/review")
+    @PatchMapping("/{completedCourseId}")
     public ResponseEntity<ApiResult<ReviewDto>> updateReview(
             @PathVariable Long completedCourseId,
             @Valid @RequestBody ReviewUpdateRequestDto reviewUpdateRequestDto,

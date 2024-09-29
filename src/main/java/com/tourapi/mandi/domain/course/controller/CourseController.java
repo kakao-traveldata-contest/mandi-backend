@@ -1,12 +1,15 @@
 package com.tourapi.mandi.domain.course.controller;
 
+import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyRequestDto;
 import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
+import com.tourapi.mandi.domain.course.service.CompletedCourseService;
 import com.tourapi.mandi.domain.course.service.CourseService;
+import com.tourapi.mandi.global.security.CustomUserDetails;
 import com.tourapi.mandi.global.util.ApiUtils;
 import com.tourapi.mandi.global.util.ApiUtils.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +19,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/courses")
 public class CourseController {
     private final CourseService courseService;
+    private final CompletedCourseService completedCourseService;
 
     @Operation(summary = "코스 목록 조회")
     @ApiResponse(responseCode = "200", description = "코스 목록 조회 성공")
@@ -66,5 +71,16 @@ public class CourseController {
     ) {
         log.info("주변 코스 목록 조회 호출 | parameter = {}", courseNearbyRequestDto);
         return ResponseEntity.ok(ApiUtils.success(courseService.findCoursesInBound(courseNearbyRequestDto)));
+    }
+
+    @Operation(summary = "완주한 코스 목록 조회")
+    @ApiResponse(responseCode = "200", description = "완주한 코스 목록 조회 성공")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
+    @GetMapping("/completed")
+    public ResponseEntity<ApiResult<CompletedCourseListResponseDto>> getCompletedCourses(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        log.info("완주한 코스 목록 조회 호출");
+        return ResponseEntity.ok(ApiUtils.success(completedCourseService.getCompletedCourses(userDetails.user())));
     }
 }

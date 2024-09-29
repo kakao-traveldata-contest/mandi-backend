@@ -7,6 +7,10 @@ import jakarta.validation.constraints.Pattern;
 import java.util.List;
 
 public record ReviewCreateRequestDto(
+        @NotNull
+        @Schema(description = "후기를 등록할 완주 코스 id")
+        Long completedCourseId,
+
         @Pattern(regexp = "^(?!\\s*$).+", message = "후기 내용은 공백 이외의 문자로 입력해야 합니다.")
         @Schema(description = "후기 내용")
         String content,
