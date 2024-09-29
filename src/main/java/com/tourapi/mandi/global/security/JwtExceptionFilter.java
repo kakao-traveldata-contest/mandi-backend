@@ -27,9 +27,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         }
+        catch (TokenExpiredException tee) {
+            setJwtExceptionResponse(request, response, tee);
+        }
         catch (JWTVerificationException  | JWTCreationException | Exception403 e ) {
             setForbiddenResponse(request, response, e);
-
         }
 
     }
