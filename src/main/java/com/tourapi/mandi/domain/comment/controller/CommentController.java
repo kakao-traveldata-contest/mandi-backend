@@ -25,24 +25,24 @@ public class CommentController {
 
 
 
-//    @Operation(summary = "댓글 추가")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "200", description = "댓글 좋아요 추가 성공"),
-//            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글에 댓글 추가 에러"),
-//            @ApiResponse(responseCode = "404", description = "존재하지 않는 댓글에 대댓글 추가 에러")
-//    })
-//    @PostMapping("/{id}")
-//    public ResponseEntity<ApiUtils.ApiResult<Boolean>> creatComment(
-//            @AuthenticationPrincipal CustomUserDetails userDetails,
-//
-//            @PathVariable Long id) {
-//
-//        // 좋아요 추가 로직 실행
-////        boolean isLiked = commentService.creatComment(id, userDetails.user());
-//
-//        // 좋아요 추가 결과 반환
-////        return ResponseEntity.ok(ApiUtils.success(isLiked));
-//    }
+    @Operation(summary = "댓글 추가")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "댓글 추가 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글에 댓글 추가 에러"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 댓글에 대댓글 추가 에러")
+    })
+    @PostMapping("/{id}")
+    public ResponseEntity<ApiUtils.ApiResult<Boolean>> creatComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+
+            @PathVariable Long id) {
+
+        // 좋아요 추가 로직 실행
+//        boolean isLiked = commentService.creatComment(id, userDetails.user());
+
+        // 좋아요 추가 결과 반환
+//        return ResponseEntity.ok(ApiUtils.success(isLiked));
+    }
 
 
 

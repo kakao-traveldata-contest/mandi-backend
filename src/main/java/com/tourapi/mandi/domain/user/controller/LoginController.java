@@ -97,7 +97,7 @@ public class LoginController {
             @ApiResponse(responseCode = "404", description = "해당하는 정보의 유저가 없을시"),
             @ApiResponse(responseCode = "404", description = "해당 토큰 값이 Redis에 존재하지 않을시")
     })
-    @PostMapping("/withdrawal")
+    @DeleteMapping("/withdrawal")
     public ResponseEntity<ApiResult<Boolean>> withdrawal(
             HttpServletRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails
