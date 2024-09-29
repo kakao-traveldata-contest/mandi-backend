@@ -15,7 +15,8 @@ public enum UserExceptionStatus implements BaseExceptionStatus {
     USER_NOT_FOUND("회원이 존재하지 않습니다", 404, "14040"),
     NICKNAME_ALREADY_EXISTS("이미 사용 중인 닉네임입니다. 다른 닉네임을 입력하세요.", 409, "14090"),
     GOOGLE_API_CONNECTION_ERROR("구글 API 연동 중 문제가 발생했습니다", 500, "15000"),
-    PROFILE_ARGUMENTS_INVALID("닉네임 또는 한줄소개 중 하나는 반드시 입력해야 합니다.", 400, "14004");
+    PROFILE_ARGUMENTS_INVALID("닉네임 또는 한줄소개 중 하나는 반드시 입력해야 합니다.", 400, "14004"),
+    USER_NOT_AUTHORIZED("권한이 없는 유저입니다.", 403, "14030");
 
     @Getter
     private final String message;

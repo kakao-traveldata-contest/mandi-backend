@@ -3,7 +3,7 @@ package com.tourapi.mandi.domain.comment.service;
 
 import com.tourapi.mandi.domain.comment.CommentExceptionStatus;
 import com.tourapi.mandi.domain.comment.dto.CommentDto;
-import com.tourapi.mandi.domain.comment.dto.CreateCommentRequestDto;
+import com.tourapi.mandi.domain.comment.dto.CommentRequestDto;
 import com.tourapi.mandi.domain.comment.entity.Comment;
 import com.tourapi.mandi.domain.comment.repository.CommentRepository;
 import com.tourapi.mandi.domain.comment.util.CommentMapper;
@@ -14,6 +14,7 @@ import com.tourapi.mandi.domain.post.util.PostMapper;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
+import com.tourapi.mandi.global.exception.Exception403;
 import com.tourapi.mandi.global.exception.Exception404;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CommentService {
 
 
 
-    public CommentDto createComment(CreateCommentRequestDto createCommentRequestDto, Long id, User user) {
+    public CommentDto createComment(CommentRequestDto commentRequestDto, Long id, User user) {
 
 
 
@@ -43,16 +44,14 @@ public class CommentService {
 
         CommentDto commentDto;
 
-
-
         //createCommentRequestDto가 null일경우
-        if(createCommentRequestDto.getParentCommentId()==null){
+        if(commentRequestDto.getParentCommentId()==null){
 
             Post post = postRepository.findById(id).orElseThrow(
                     () -> new Exception404(PostExceptionStatus.POST_NOT_FOUND)
             );
 
-            Comment comment=CommentMapper.toCommentFromCreateCommentRequestDto(createCommentRequestDto,post,user,null);
+            Comment comment=CommentMapper.toCommentFromCreateCommentRequestDto(commentRequestDto,post,user,null);
 
 
             commentRepository.save(comment);
@@ -65,7 +64,7 @@ public class CommentService {
             Comment existingComment = commentRepository.findById(id).orElseThrow(
                     () -> new Exception404(CommentExceptionStatus.COMMENT_NOT_FOUND)
             );
-            Comment comment=CommentMapper.toCommentFromCreateCommentRequestDto(createCommentRequestDto,existingComment.getPost(),user,existingComment);
+            Comment comment=CommentMapper.toCommentFromCreateCommentRequestDto(commentRequestDto,existingComment.getPost(),user,existingComment);
             commentRepository.save(comment);
 
              commentDto = CommentMapper.toCommentDto(comment);
@@ -73,6 +72,42 @@ public class CommentService {
         }
 
         return commentDto;
+    }
+
+    public Boolean deleteComment(Long id, User user) {
+
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new Exception404(CommentExceptionStatus.COMMENT_NOT_FOUND));
+
+
+        // 지우려는 댓글의 유저와 요청한 사용자가 일치하는지 확인
+        if (!comment.getUser().getUserId().equals(user.getUserId())) {
+            throw new Exception403(UserExceptionStatus.USER_NOT_AUTHORIZED);
+        }
+
+        comment.setDeleted(true);
+
+
+        return true;
+    }
+
+
+    public CommentDto updateComment(CommentRequestDto commentRequestDto,Long id, User user) {
+
+
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new Exception404(CommentExceptionStatus.COMMENT_NOT_FOUND));
+
+
+        // 변경하려는 댓글의 유저와 요청한 사용자가 일치하는지 확인
+        if (!comment.getUser().getUserId().equals(user.getUserId())) {
+            throw new Exception403(UserExceptionStatus.USER_NOT_AUTHORIZED);
+        }
+
+        comment.setContent(commentRequestDto.getContent());
+
+
+        return CommentMapper.toCommentDto(comment);
     }
 
 

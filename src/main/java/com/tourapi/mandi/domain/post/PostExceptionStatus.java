@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PostExceptionStatus implements BaseExceptionStatus {
 
-    POST_NOT_FOUND("해당하는 게시글이 없습니다.", 404, "24040"),
-    USER_NOT_AUTHORIZED("권한이 없는 유저입니다.", 403, "24030");
+    POST_NOT_FOUND("해당하는 게시글이 없습니다.", 404, "24040");
+
 
     @Getter
     private final String message;

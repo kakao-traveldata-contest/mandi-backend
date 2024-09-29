@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class CreateCommentRequestDto {
+public class CommentRequestDto {
     private Long parentCommentId;
     private String content;
 
