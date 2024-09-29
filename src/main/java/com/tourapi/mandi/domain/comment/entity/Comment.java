@@ -41,6 +41,7 @@ public class Comment extends AuditingEntity {
     private User user;
 
     @Column(name = "content", length = 500, nullable = false)
+    @Setter
     private String content;  // 댓글 본문
 
     @Column(name = "like_cnt", nullable = false)

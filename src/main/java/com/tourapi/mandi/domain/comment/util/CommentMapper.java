@@ -2,7 +2,7 @@ package com.tourapi.mandi.domain.comment.util;
 
 
 import com.tourapi.mandi.domain.comment.dto.CommentDto;
-import com.tourapi.mandi.domain.comment.dto.CreateCommentRequestDto;
+import com.tourapi.mandi.domain.comment.dto.CommentRequestDto;
 import com.tourapi.mandi.domain.comment.entity.Comment;
 import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.domain.post.util.PostMapper;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CommentMapper {
 
 
-    public static Comment toCommentFromCreateCommentRequestDto(CreateCommentRequestDto createCommentRequestDto, Post post, User user, Comment parentComment) {
+    public static Comment toCommentFromCreateCommentRequestDto(CommentRequestDto createCommentRequestDto, Post post, User user, Comment parentComment) {
         return Comment.builder()
                 .post(post) // Post 객체
                 .parentComment(parentComment) // 부모 댓글 (없으면 null)
