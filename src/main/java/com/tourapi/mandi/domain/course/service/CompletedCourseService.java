@@ -84,8 +84,8 @@ public class CompletedCourseService  {
     }
 
     @Transactional
-    public ReviewDto createReview(Long completedCourseId, User user, ReviewCreateRequestDto reviewCreateRequestDto) {
-        CompletedCourse completedCourse = getValidatedCompletedCourseOfUser(user, completedCourseId);
+    public ReviewDto createReview(User user, ReviewCreateRequestDto reviewCreateRequestDto) {
+        CompletedCourse completedCourse = getValidatedCompletedCourseOfUser(user, reviewCreateRequestDto.completedCourseId());
 
         if (completedCourse.getIsReviewed().equals(TRUE)) {
             throw new Exception409(CourseExceptionStatus.REVIEW_ALREADY_EXISTS);

@@ -75,7 +75,13 @@ public class OpenAPIConfig {
                 .build();
     }
 
-
+    @Bean
+    public GroupedOpenApi completedCourseOpenApi() {
+        return GroupedOpenApi.builder()
+                .group("후기 API")
+                .pathsToMatch("/reviews/**")
+                .build();
+    }
 
     @Bean
     public GroupedOpenApi postOpenApi() {
@@ -85,8 +91,6 @@ public class OpenAPIConfig {
                 .build();
     }
 
-
-
     @Bean
     public GroupedOpenApi commentOpenApi() {
         return GroupedOpenApi.builder()
@@ -94,8 +98,6 @@ public class OpenAPIConfig {
                 .pathsToMatch("/comments/**")
                 .build();
     }
-
-
 
     @Bean
     public GroupedOpenApi trekkingOpenApi() {
