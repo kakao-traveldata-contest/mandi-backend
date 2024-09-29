@@ -14,6 +14,7 @@ import com.tourapi.mandi.domain.post.util.PostMapper;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.repository.UserJpaRepository;
+import com.tourapi.mandi.global.exception.Exception403;
 import com.tourapi.mandi.global.exception.Exception404;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,6 @@ public class CommentService {
 
         CommentDto commentDto;
 
-
-
         //createCommentRequestDto가 null일경우
         if(createCommentRequestDto.getParentCommentId()==null){
 
@@ -73,6 +72,23 @@ public class CommentService {
         }
 
         return commentDto;
+    }
+
+    public Boolean deleteComment(Long id, User user) {
+
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new Exception404(CommentExceptionStatus.COMMENT_NOT_FOUND));
+
+
+        // 지우려는 댓글의 유저와 요청한 사용자가 일치하는지 확인
+        if (!comment.getUser().getUserId().equals(user.getUserId())) {
+            throw new Exception403(UserExceptionStatus.USER_NOT_AUTHORIZED);
+        }
+
+        comment.setDeleted(true);
+
+
+        return true;
     }
 
 

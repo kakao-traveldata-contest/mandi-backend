@@ -99,7 +99,7 @@ public class PostService {
 
         // 게시글 작성자와 요청한 사용자가 일치하는지 확인
         if (!existingPost.getUser().getUserId().equals(user.getUserId())) {
-            throw new Exception403(PostExceptionStatus.USER_NOT_AUTHORIZED);
+            throw new Exception403(UserExceptionStatus.USER_NOT_AUTHORIZED);
         }
         
         // S3에 해당하는 이미지들 전부삭제
@@ -121,7 +121,7 @@ public class PostService {
 
         // 게시글 작성자와 요청한 사용자가 일치하는지 확인
         if (!existingPost.getUser().getUserId().equals(user.getUserId())) {
-            throw new Exception403(PostExceptionStatus.USER_NOT_AUTHORIZED);
+            throw new Exception403(UserExceptionStatus.USER_NOT_AUTHORIZED);
         }
 
         //우선 dto에잇는 정보들로 post 내용변경

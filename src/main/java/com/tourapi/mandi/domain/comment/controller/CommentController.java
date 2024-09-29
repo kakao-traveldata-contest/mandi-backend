@@ -31,7 +31,8 @@ public class CommentController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "댓글 추가 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 게시글에 댓글 추가 에러"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 댓글에 대댓글 추가 에러")
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 댓글에 대댓글 추가 에러"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 유저가 댓글 추가 에러")
     })
     @PostMapping("/{id}")
     public ResponseEntity<ApiUtils.ApiResult<CommentDto>> creatComment(
@@ -45,6 +46,22 @@ public class CommentController {
         return ResponseEntity.ok(ApiUtils.success(commentDto));
     }
 
+
+    @Operation(summary = "댓글 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "댓글 삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 댓글에대한 삭제 에러"),
+            @ApiResponse(responseCode = "403", description = "지우려는 댓글의 사용자와 삭제 요청을 한 유저가 다르면 에러"),
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiUtils.ApiResult<Boolean>> deleteComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long id) {
+
+        Boolean result = commentService.deleteComment(id, userDetails.user());
+
+        return ResponseEntity.ok(ApiUtils.success(result));
+    }
 
 
     @Operation(summary = "댓글 좋아요 추가")
