@@ -1,6 +1,8 @@
 package com.tourapi.mandi.domain.comment.controller;
 
 
+import com.tourapi.mandi.domain.comment.dto.CommentDto;
+import com.tourapi.mandi.domain.comment.dto.CreateCommentRequestDto;
 import com.tourapi.mandi.domain.comment.service.CommentService;
 import com.tourapi.mandi.global.security.CustomUserDetails;
 import com.tourapi.mandi.global.util.ApiUtils;
@@ -32,16 +34,15 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 댓글에 대댓글 추가 에러")
     })
     @PostMapping("/{id}")
-    public ResponseEntity<ApiUtils.ApiResult<Boolean>> creatComment(
+    public ResponseEntity<ApiUtils.ApiResult<CommentDto>> creatComment(
+            @RequestBody CreateCommentRequestDto createCommentRequestDto,
             @AuthenticationPrincipal CustomUserDetails userDetails,
-
             @PathVariable Long id) {
 
-        // 좋아요 추가 로직 실행
-//        boolean isLiked = commentService.creatComment(id, userDetails.user());
+        CommentDto commentDto = commentService.createComment(createCommentRequestDto,id, userDetails.user());
 
         // 좋아요 추가 결과 반환
-//        return ResponseEntity.ok(ApiUtils.success(isLiked));
+        return ResponseEntity.ok(ApiUtils.success(commentDto));
     }
 
 
