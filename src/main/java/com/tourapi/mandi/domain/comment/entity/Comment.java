@@ -1,7 +1,9 @@
 package com.tourapi.mandi.domain.comment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
+import com.tourapi.mandi.domain.post.entity.PostImage;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.global.util.AuditingEntity;
 import jakarta.persistence.*;
@@ -49,4 +51,16 @@ public class Comment extends AuditingEntity {
     @Column(name = "is_deleted", nullable = false)
     @Setter
     private boolean isDeleted;
+
+
+    @Builder
+    public Comment(Post post, Comment parentComment, User user, String content, int likeCnt, boolean isDeleted) {
+        this.post = post;
+        this.parentComment = parentComment;
+        this.user = user;
+        this.content = content;
+        this.likeCnt = likeCnt;
+        this.isDeleted = isDeleted;
+    }
+
 }

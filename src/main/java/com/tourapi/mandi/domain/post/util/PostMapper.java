@@ -2,6 +2,7 @@ package com.tourapi.mandi.domain.post.util;
 
 import com.tourapi.mandi.domain.comment.dto.CommentDto;
 import com.tourapi.mandi.domain.comment.entity.Comment;
+import com.tourapi.mandi.domain.comment.util.CommentMapper;
 import com.tourapi.mandi.domain.post.dto.*;
 import com.tourapi.mandi.domain.post.entity.Category;
 import com.tourapi.mandi.domain.post.entity.Post;
@@ -28,7 +29,7 @@ public final class PostMapper {
         // 부모 댓글 리스트
         List<CommentDto> parentComments = post.getCommentList().stream()
                 .filter(c -> c.getParentComment() == null)  // 부모 댓글만 포함
-                .map(PostMapper::toCommentDto)
+                .map(CommentMapper::toCommentDto)
                 .toList();
 
         // 댓글의 총 개수 계산
@@ -125,7 +126,7 @@ public final class PostMapper {
         // 부모 댓글 리스트
         List<CommentDto> parentComments = post.getCommentList().stream()
                 .filter(c -> c.getParentComment() == null)  // 부모 댓글만 포함
-                .map(PostMapper::toCommentDto)
+                .map(CommentMapper::toCommentDto)
                 .toList();
 
         // 댓글의 총 개수 계산
@@ -151,20 +152,7 @@ public final class PostMapper {
                 .build();
     }
 
-    public static CommentDto toCommentDto(Comment comment) {
-        return CommentDto.builder()
-                .commentId(comment.getCommentId())  // 댓글 ID
-                .parentCommentId(comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null)
-                .content(comment.getContent())  // 댓글 내용
-                .likeCnt(comment.getLikeCnt())  // 좋아요 수
-                .user(toUserDto(comment.getUser()))
-                .uploadDate(comment.getCreatedAt())
-                .isDeleted(comment.isDeleted())
-                .childComments(comment.getChildComments().stream()
-                        .map(PostMapper::toCommentDto)
-                        .toList())  // 자식 댓글 리스트
-                .build();
-    }
+
 
 
 
