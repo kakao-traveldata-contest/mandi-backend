@@ -32,12 +32,11 @@ public final class PostMapper {
                 .map(CommentMapper::toCommentDto)
                 .toList();
 
-        // 댓글의 총 개수 계산
-        int totalCommentCount = post.getCommentList().size();  // 모든 댓글 개수
-        int childCommentCount = post.getCommentList().stream()
-                .mapToInt(comment -> comment.getChildComments().size())
-                .sum();  // 자식 댓글 개수 계산
 
+        // 삭제되지 않은 댓글의 총 개수 계산
+        int totalCommentCount = post.getCommentList().stream()
+                .filter(comment -> !comment.isDeleted())  // isDelete가 false인 댓글만 카운트
+                .toList().size();
 
 
         return PostDto.builder()
@@ -129,11 +128,10 @@ public final class PostMapper {
                 .map(CommentMapper::toCommentDto)
                 .toList();
 
-        // 댓글의 총 개수 계산
-        int totalCommentCount = post.getCommentList().size();  // 모든 댓글 개수
-        int childCommentCount = post.getCommentList().stream()
-                .mapToInt(comment -> comment.getChildComments().size())
-                .sum();  // 자식 댓글 개수 계산
+        // 삭제되지 않은 댓글의 총 개수 계산
+        int totalCommentCount = post.getCommentList().stream()
+                .filter(comment -> !comment.isDeleted())  // isDelete가 false인 댓글만 카운트
+                .toList().size();
 
 
         return DetailPostDto.builder()
