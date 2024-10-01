@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface CompletedCourseRepository extends JpaRepository<CompletedCourse, Long> {
+public interface CompletedCourseRepository extends JpaRepository<CompletedCourse, Long>, CompletedCourseRepositoryCustom {
     @Query("select cc from CompletedCourse cc "
             + "join fetch cc.course "
             + "left join fetch cc.reviewImageList rIL "

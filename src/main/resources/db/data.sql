@@ -190,34 +190,30 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://mandi-co
 
 INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, distance, trekking_path_image_url, is_reviewed,
                                 review_content, review_score, reviewed_at, started_at, completed_at, created_at, last_modified_at)
-VALUES (1, 3, 1, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good', 5, now(), DATEADD('MINUTE', -35, now()), now(), now(), now()),
-       (2, 3, 2, 1.23, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
+VALUES (1, 3, 4, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good',
+        5, now(), DATEADD('MINUTE', -35, now()), now(), now(), now()),
+       (2, 3, 5, 1.23, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice',
+        4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
        (3, 3, 3, 2.7, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -84, now()), now(), now(), now()),
-       (4, 4, 4, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good', 5, now(), DATEADD('MINUTE', -27, now()), now(), now(), now()),
+       (4, 4, 4, 0.875, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'good',
+        4, now(), DATEADD('MINUTE', -27, now()), now(), now(), now()),
        (5, 4, 5, 1.23, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice', 4, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
        (6, 4, 6, 4.0, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null, null, null, DATEADD('MINUTE', -72, now()), now(), now(), now()),
-       (7, 6, 9, 2.2, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'nice',
-        3, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
-       (8, 6, 10, 1.35, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 0, null,
-        null, null, DATEADD('MINUTE', -72, now()), now(), now(), now())
+       (7, 6, 4, 2.2, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'bad',
+        2, now(), DATEADD('MINUTE', -60, now()), now(), now(), now()),
+       (8, 6, 5, 1.35, 'https://github.com/user-attachments/assets/03fea9d2-c196-4a8a-84e0-4e10c36ecfc6', 1, 'poor',
+        1, now(), DATEADD('MINUTE', -72, now()), now(), now(), now())
 ;
 
-INSERT INTO review_image_tb(review_image_id, completed_course_id, url)
-VALUES (1, 1, '1_image_1'),
-       (2, 1, '1_image_2'),
-       (3, 1, '1_image_3'),
-       (4, 1, '1_image_4'),
-       (5, 1, '1_image_5'),
-       (6, 2, '2_image_1'),
-       (7, 2, '2_image_2'),
-       (8, 4, '4_image_1'),
-       (9, 4, '4_image_2'),
-       (10, 4, '4_image_3'),
-       (11, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (12, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (13, 5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (14, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
-       (15, 7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19')
+INSERT INTO review_image_tb(completed_course_id, url)
+VALUES (4, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/dea964a8-cf01-4288-9da0-f113ebe8beed'),
+       (4, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/dea964a8-cf01-4288-9da0-f113ebe8beed'),
+       (4, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/dea964a8-cf01-4288-9da0-f113ebe8beed'),
+       (5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (5, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/e0148789-abe6-477f-be42-9a2fc852cf19'),
+       (7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/86b65b9c-533c-4991-9b7d-54a86457e988'),
+       (7, 'https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/86b65b9c-533c-4991-9b7d-54a86457e988')
 ;
 
 -- 기본 댓글 (parent_comment_id가 NULL)

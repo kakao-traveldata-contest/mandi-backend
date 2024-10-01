@@ -6,6 +6,8 @@ import static java.lang.Boolean.TRUE;
 import com.tourapi.mandi.domain.course.CourseExceptionStatus;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseDto;
 import com.tourapi.mandi.domain.course.dto.CompletedCourseListResponseDto;
+import com.tourapi.mandi.domain.course.dto.CourseReviewListResponseDto;
+import com.tourapi.mandi.domain.course.dto.CourseReviewSearch;
 import com.tourapi.mandi.domain.course.dto.ReviewCreateRequestDto;
 import com.tourapi.mandi.domain.course.dto.ReviewDto;
 import com.tourapi.mandi.domain.course.dto.ReviewListResponseDto;
@@ -13,6 +15,7 @@ import com.tourapi.mandi.domain.course.dto.ReviewUpdateRequestDto;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
 import com.tourapi.mandi.domain.course.entity.ReviewImage;
 import com.tourapi.mandi.domain.course.repository.CompletedCourseRepository;
+import com.tourapi.mandi.domain.course.repository.ReviewSummary;
 import com.tourapi.mandi.domain.course.util.CompletedCourseMapper;
 import com.tourapi.mandi.domain.course.util.ReviewMapper;
 import com.tourapi.mandi.domain.user.entity.User;
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -152,6 +156,13 @@ public class CompletedCourseService  {
             .stream()
             .mapToDouble(course -> course.getDistance().doubleValue())
             .sum();
+    }
+
+    public CourseReviewListResponseDto getReviewsByCourseId(Long courseId, CourseReviewSearch courseReviewSearch) {
+        Page<CompletedCourse> page = completedCourseRepository.findReviewsBySearch(courseId, courseReviewSearch);
+        ReviewSummary reviewSummary = completedCourseRepository.getReviewSummary(courseId);
+
+        return ReviewMapper.toCourseReviewListResponseDto(page, reviewSummary);
     }
 
     private List<String> uploadReviewImages(List<String> base64EncodedImageList) {
