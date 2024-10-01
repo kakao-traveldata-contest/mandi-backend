@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateTimeUtil {
 	private static final DateTimeFormatter defaultFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-	private static final Pattern durationPattern = Pattern.compile("(\\d+)h\\s*(\\d+)?m?");
+	private static final Pattern durationPattern = Pattern.compile("(?:(\\d+)h)?\\s*(?:(\\d+)m)?");
 
 	private static final String hourMinuteFormat = "%d:%02d";
 	private static final int HOUR = 1;
