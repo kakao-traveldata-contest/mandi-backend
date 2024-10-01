@@ -186,6 +186,13 @@ VALUES (1, 'Namparang Trail Course 1', 19.0, 'Moderate', '7h', 'https://mandi-co
         35.2835369, 129.0723127,
         'Dongmun', '산41-8 Geumseong-dong, Geumjeong-gu, Busan', 35.2454899, 129.0637377,
         'Sanghyeon Village', '1020-8 Seon-dong, Geumjeong-gu, Busan', 35.2664548, 129.1126209,
+        now(), now()),
+       (21, 'Test Route', 0.355, 'Easy', '6m', 'https://mandi-courses.s3.ap-northeast-2.amazonaws.com/default.png',
+        0,
+        'https://mandi-courses.s3.ap-northeast-2.amazonaws.com/test_route.gpx',
+        37.563177830368325, 127.19305738467209,
+        'Test Point1', 'Seoul', 37.563646503483525, 127.19515479126598,
+        'Test Point2', 'Seoul', 37.56372296054607, 127.19248833541215,
         now(), now());
 
 INSERT INTO completed_course_tb(completed_course_id, user_id, course_id, distance, trekking_path_image_url, is_reviewed,
