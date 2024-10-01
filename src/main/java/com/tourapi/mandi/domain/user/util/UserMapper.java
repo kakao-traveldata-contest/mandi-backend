@@ -1,16 +1,15 @@
 package com.tourapi.mandi.domain.user.util;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+import com.tourapi.mandi.domain.post.dto.UserDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
 import com.tourapi.mandi.domain.user.entity.User;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.UUID;
 
 
 
@@ -37,6 +36,14 @@ public final class UserMapper {
                 .userId(id)
                 .email(email)
                 .role(role)
+                .build();
+    }
+
+    public static UserDto toUserDto(User user) {
+        return UserDto.builder()
+                .userId(user.getUserId())
+                .nickname(user.getNickname())
+                .imgUrl(user.getImgUrl())
                 .build();
     }
 }
