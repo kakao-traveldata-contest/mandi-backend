@@ -2,15 +2,15 @@ package com.tourapi.mandi.domain.course.repository;
 
 import static com.tourapi.mandi.domain.course.entity.QCompletedCourse.completedCourse;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tourapi.mandi.domain.course.dto.CourseReviewSearch;
 import com.tourapi.mandi.domain.course.entity.CompletedCourse;
 import com.tourapi.mandi.domain.course.util.CourseReviewSortType;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,43 +34,52 @@ public class CompletedCourseRepositoryImpl implements CompletedCourseRepositoryC
 
     @Override
     public ReviewSummary getReviewSummary(Long courseId) {
-        Tuple result = jpaQueryFactory
-                .select(
-                        completedCourse.count(),
-                        completedCourse.reviewScore.avg(),
-                        completedCourse.reviewScore.eq(EXCELLENT).count(),
-                        completedCourse.reviewScore.eq(VERY_GOOD).count(),
-                        completedCourse.reviewScore.eq(AVERAGE).count(),
-                        completedCourse.reviewScore.eq(POOR).count(),
-                        completedCourse.reviewScore.eq(TERRIBLE).count()
-                )
+        List<Integer> scores = jpaQueryFactory
+                .select(completedCourse.reviewScore)
                 .from(completedCourse)
                 .where(applyFilter(courseId))
-                .fetchOne();
+                .fetch();
 
-        return createReviewSummary(result);
+        return createReviewSummary(scores);
     }
 
-    private ReviewSummary createReviewSummary(Tuple result) {
-        return Optional.ofNullable(result)
-                .map(r -> ReviewSummary.builder()
-                        .totalReviewCount(r.get(0, Long.class))
-                        .averageReviewScore(r.get(1, Double.class))
-                        .excellentCount(r.get(2, Long.class))
-                        .veryGoodCount(r.get(3, Long.class))
-                        .averageCount(r.get(4, Long.class))
-                        .poorCount(r.get(5, Long.class))
-                        .terribleCount(r.get(6, Long.class))
-                        .build())
-                .orElseGet(() -> ReviewSummary.builder()
-                        .totalReviewCount(0L)
-                        .averageReviewScore(0.0)
-                        .excellentCount(0L)
-                        .veryGoodCount(0L)
-                        .averageCount(0L)
-                        .poorCount(0L)
-                        .terribleCount(0L)
-                        .build());
+    private ReviewSummary createReviewSummary(List<Integer> scores) {
+        if (scores.isEmpty()) {
+            return ReviewSummary.builder()
+                    .averageReviewScore(BigDecimal.ZERO)
+                    .excellentCount(0L)
+                    .veryGoodCount(0L)
+                    .averageCount(0L)
+                    .poorCount(0L)
+                    .terribleCount(0L)
+                    .build();
+        }
+
+        BigDecimal averageReviewScore = scores.stream()
+                .map(BigDecimal::valueOf)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(BigDecimal.valueOf(scores.size()), 1, RoundingMode.HALF_UP);
+
+        Long excellentCount = getCountFilterByReviewScore(scores, EXCELLENT);
+        Long veryGoodCount = getCountFilterByReviewScore(scores, VERY_GOOD);
+        Long averageCount = getCountFilterByReviewScore(scores, AVERAGE);
+        Long poorCount = getCountFilterByReviewScore(scores, POOR);
+        Long terribleCount = getCountFilterByReviewScore(scores, TERRIBLE);
+
+        return ReviewSummary.builder()
+                .averageReviewScore(averageReviewScore)
+                .excellentCount(excellentCount)
+                .veryGoodCount(veryGoodCount)
+                .averageCount(averageCount)
+                .poorCount(poorCount)
+                .terribleCount(terribleCount)
+                .build();
+    }
+
+    private Long getCountFilterByReviewScore(List<Integer> scores, int targetScore) {
+        return scores.stream()
+                .filter(s -> s == targetScore)
+                .count();
     }
 
     private List<CompletedCourse> queryItems(Long courseId, CourseReviewSearch courseReviewSearch) {

@@ -1,11 +1,11 @@
 package com.tourapi.mandi.domain.course.repository;
 
+import java.math.BigDecimal;
 import lombok.Builder;
 
 @Builder
 public record ReviewSummary(
-        Long totalReviewCount,
-        Double averageReviewScore,
+        BigDecimal averageReviewScore,
         Long excellentCount,
         Long veryGoodCount,
         Long averageCount,
