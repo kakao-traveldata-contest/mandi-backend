@@ -12,8 +12,6 @@ import com.tourapi.mandi.domain.course.entity.ReviewImage;
 import com.tourapi.mandi.domain.course.repository.ReviewSummary;
 import com.tourapi.mandi.domain.user.util.UserMapper;
 import com.tourapi.mandi.global.dto.PageInfoDto;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -68,18 +66,15 @@ public final class ReviewMapper {
 
         return CourseReviewListResponseDto.builder()
                 .pageInfo(new PageInfoDto(page))
-                .reviewSummary(toReviewSummaryDto(reviewSummary))
+                .reviewSummary(toReviewSummaryDto(page.getTotalElements(), reviewSummary))
                 .reviews(reviews)
                 .build();
     }
 
-    private static ReviewSummaryDto toReviewSummaryDto(ReviewSummary reviewSummary) {
-        BigDecimal scaledAverageScore = BigDecimal.valueOf(reviewSummary.averageReviewScore())
-                .setScale(1, RoundingMode.HALF_UP);
-
+    private static ReviewSummaryDto toReviewSummaryDto(Long totalCount, ReviewSummary reviewSummary) {
         return ReviewSummaryDto.builder()
-                .totalReviewCount(reviewSummary.totalReviewCount())
-                .averageReviewScore(scaledAverageScore)
+                .totalReviewCount(totalCount)
+                .averageReviewScore(reviewSummary.averageReviewScore())
                 .excellentCount(reviewSummary.excellentCount())
                 .veryGoodCount(reviewSummary.veryGoodCount())
                 .averageCount(reviewSummary.averageCount())
