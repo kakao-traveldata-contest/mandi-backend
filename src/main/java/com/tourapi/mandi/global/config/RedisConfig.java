@@ -14,7 +14,7 @@ public class RedisConfig {
     @Bean
     public LettuceClientConfigurationBuilderCustomizer lettuceClientConfigCustomize() {
         return builder -> {
-            builder.useSsl();
+//            builder.useSsl();
             builder.commandTimeout(Duration.ofSeconds(10));
             builder.shutdownTimeout(Duration.ZERO);
         };
