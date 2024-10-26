@@ -1,16 +1,17 @@
 package com.tourapi.mandi.domain.course.dto;
 
 import com.tourapi.mandi.domain.course.entity.Coordinate;
-import com.tourapi.mandi.domain.course.entity.Course;
 import com.tourapi.mandi.domain.course.entity.DifficultyLevel;
 import com.tourapi.mandi.domain.course.entity.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
+import lombok.Builder;
 
+@Builder
 public record CourseNearbyResponseDto(
         @Schema(description = "코스 id")
-
         Long id,
+
         @Schema(description = "코스 이름")
         String courseName,
 
@@ -38,19 +39,4 @@ public record CourseNearbyResponseDto(
         @Schema(description = "코스 경로 gpx url")
         String gpxUrl
 ) {
-    public CourseNearbyResponseDto(Course course) {
-        this(
-                course.getCourseId(),
-                course.getName(),
-                course.getDistance(),
-                course.getStartPoint(),
-                course.getMidPoint(),
-                course.getEndPoint(),
-                course.getDifficulty(),
-                course.getRatingAverage(),
-                course.getDuration(),
-                course.getRouteUrl()
-        );
-    }
 }
-

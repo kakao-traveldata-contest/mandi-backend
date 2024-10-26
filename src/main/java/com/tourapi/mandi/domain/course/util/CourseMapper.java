@@ -18,12 +18,26 @@ import org.springframework.data.domain.Page;
 public final class CourseMapper {
     public static CourseListResponseDto toCourseListResponseDto(final Page<Course> page) {
         List<CourseListItemResponseDto> courses = page.stream()
-                .map(CourseListItemResponseDto::new)
+                .map(CourseMapper::toCourseListItemDto)
                 .toList();
 
         return CourseListResponseDto.builder()
                 .pageInfo(new PageInfoDto(page))
                 .courses(courses)
+                .build();
+    }
+
+    private static CourseListItemResponseDto toCourseListItemDto(final Course course) {
+        return CourseListItemResponseDto.builder()
+                .id(course.getCourseId())
+                .courseName(course.getName())
+                .distance(course.getDistance())
+                .startPointName(course.getStartPoint().getName())
+                .endPointName(course.getEndPoint().getName())
+                .difficulty(course.getDifficulty())
+                .ratingAverage(course.getRatingAverage())
+                .duration(DateTimeUtil.formatHourMinute(course.getDuration()))
+                .imgUrl(course.getImgUrl())
                 .build();
     }
 
@@ -35,11 +49,26 @@ public final class CourseMapper {
 
     public static CourseNearbyListResponseDto toCourseNearbyResponseDto(final List<Course> nearByCourses) {
         List<CourseNearbyResponseDto> courses = nearByCourses.stream()
-                .map(CourseNearbyResponseDto::new)
+                .map(CourseMapper::toCourseNearbyItemDto)
                 .toList();
 
         return CourseNearbyListResponseDto.builder()
                 .courses(courses)
+                .build();
+    }
+
+    private static CourseNearbyResponseDto toCourseNearbyItemDto(final Course course) {
+        return CourseNearbyResponseDto.builder()
+                .id(course.getCourseId())
+                .courseName(course.getName())
+                .distance(course.getDistance())
+                .startPoint(course.getStartPoint())
+                .midPoint(course.getMidPoint())
+                .endPoint(course.getEndPoint())
+                .difficulty(course.getDifficulty())
+                .ratingAverage(course.getRatingAverage())
+                .duration(DateTimeUtil.formatHourMinute(course.getDuration()))
+                .gpxUrl(course.getRouteUrl())
                 .build();
     }
 

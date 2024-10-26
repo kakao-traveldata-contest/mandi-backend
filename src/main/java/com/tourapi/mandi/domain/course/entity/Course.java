@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class Course extends AuditingEntity {
 
     private BigDecimal distance;
 
-    private String duration;
+    private LocalTime duration;
 
     private BigDecimal ratingAverage;
 
