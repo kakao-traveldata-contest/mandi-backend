@@ -27,7 +27,7 @@ public class User extends AuditingEntity {
     private List<Post> posts;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_preference_id", nullable = false)
+    @JoinColumn(name = "course_preference_id")
     private CoursePreference coursePreference;
 
     @Id
