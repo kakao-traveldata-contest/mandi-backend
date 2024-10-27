@@ -1,6 +1,7 @@
 package com.tourapi.mandi.domain.user.entity;
 
 import com.tourapi.mandi.domain.comment.entity.Comment;
+import com.tourapi.mandi.domain.course.entity.CoursePreference;
 import com.tourapi.mandi.domain.post.entity.Post;
 import com.tourapi.mandi.domain.user.entity.constant.Provider;
 import com.tourapi.mandi.domain.user.entity.constant.Role;
@@ -25,7 +26,9 @@ public class User extends AuditingEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Post> posts;
 
-
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_preference_id")
+    private CoursePreference coursePreference;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,5 +90,9 @@ public class User extends AuditingEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getUserId());
+    }
+
+    public void updatePreference(final CoursePreference coursePreference) {
+        this.coursePreference = coursePreference;
     }
 }
