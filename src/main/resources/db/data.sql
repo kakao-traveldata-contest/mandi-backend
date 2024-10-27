@@ -16,14 +16,25 @@ VALUES ('https://mandi-courses.s3.ap-northeast-2.amazonaws.com/badge05.png', 'Wa
 INSERT INTO badge_tb(img_url, name, requirements, created_at, last_modified_at)
 VALUES ('https://mandi-courses.s3.ap-northeast-2.amazonaws.com/badge06.png', 'Mandiholic', 'More than 10 visits to Mandi', now(), now());
 
-INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, created_at, last_modified_at)
+-- 코스 선호도 등록
+INSERT INTO course_preference_tb(course_preference_id, difficulty_level, duration_level, environment_type, created_at, last_modified_at)
 VALUES
-    ('hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
-    ('hello', 'jhy0285@gmail.com', '', '조영진', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
-    ('hello', 'hcy1722@korea.ac.kr', '', 'hcy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
-    ('hello', 'sangmin0205@gmail.com', '', 'sm', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
-    ('hello', 'chosohi20@gmail.com', '', 'csh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now()),
-    ('hello', 'vnclfjqm12@gmail.com', '', 'lsy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', now(), now())
+    (1, 1, 2, 3, now(), now()),
+    (2, 2, 2, 1, now(), now()),
+    (3, 2, 4, 2, now(), now()),
+    (4, 1, 1, 1, now(), now()),
+    (5, 2, 2, 3, now(), now()),
+    (6, 2, 3, 3, now(), now())
+;
+
+INSERT INTO user_tb(description, email, img_url, nickname, password, provider, role, course_preference_id, created_at, last_modified_at)
+VALUES
+    ('hello world', 'lsh901673@gmail.com', '', 'lsh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', 1, now(), now()),
+    ('hello', 'jhy0285@gmail.com', '', '조영진', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', 2, now(), now()),
+    ('hello', 'hcy1722@korea.ac.kr', '', 'hcy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', 3, now(), now()),
+    ('hello', 'sangmin0205@gmail.com', '', 'sm', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', 4, now(), now()),
+    ('hello', 'chosohi20@gmail.com', '', 'csh', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', 5, now(), now()),
+    ('hello', 'vnclfjqm12@gmail.com', '', 'lsy', '1234', 'PROVIDER_GOOGLE', 'ROLE_USER', 6, now(), now())
 ;
 
 INSERT INTO user_badge_tb(user_id, badge_id, created_at, last_modified_at)
