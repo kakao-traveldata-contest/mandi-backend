@@ -45,6 +45,20 @@ public class ReviewController {
         return ResponseEntity.ok(ApiUtils.success(responseDto));
     }
 
+    @Operation(summary = "후기 상세 조회 및 수정 가능 여부 확인")
+    @ApiResponse(responseCode = "200", description = "후기 조회 성공 & 후기 수정 가능")
+    @ApiResponse(responseCode = "403", description = "권한 없는 사용자 요청 에러")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 후기 요청 에러")
+    @GetMapping("/{completedCourseId}")
+    public ResponseEntity<ApiResult<ReviewDto>> getReview(
+            @PathVariable Long completedCourseId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        ReviewDto responseDto = completedCourseService.getReview(userDetails.user(), completedCourseId);
+
+        return ResponseEntity.ok(ApiUtils.success(responseDto));
+    }
+
     @Operation(summary = "후기 등록")
     @ApiResponse(responseCode = "200", description = "후기 등록 성공")
     @ApiResponse(responseCode = "400", description = "S3 이미지 생성 에러")

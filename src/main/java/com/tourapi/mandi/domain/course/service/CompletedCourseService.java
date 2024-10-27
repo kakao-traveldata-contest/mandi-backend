@@ -87,6 +87,13 @@ public class CompletedCourseService  {
         );
     }
 
+    @Transactional(readOnly = true)
+    public ReviewDto getReview(User user, Long completedCourseId) {
+        CompletedCourse review = getValidatedReviewOfUser(user, completedCourseId);
+
+        return ReviewMapper.toReviewDto(review);
+    }
+
     @Transactional
     public ReviewDto createReview(User user, ReviewCreateRequestDto reviewCreateRequestDto) {
         CompletedCourse completedCourse = getValidatedCompletedCourseOfUser(user, reviewCreateRequestDto.completedCourseId());
