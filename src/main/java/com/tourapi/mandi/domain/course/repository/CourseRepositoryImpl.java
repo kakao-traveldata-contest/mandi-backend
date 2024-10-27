@@ -9,8 +9,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
 import com.tourapi.mandi.domain.course.entity.Coordinate;
 import com.tourapi.mandi.domain.course.entity.Course;
+import com.tourapi.mandi.domain.course.entity.CoursePreference;
 import com.tourapi.mandi.domain.course.entity.DifficultyLevel;
+import com.tourapi.mandi.domain.course.entity.DurationLevel;
 import com.tourapi.mandi.domain.course.entity.QCoordinate;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -97,5 +100,24 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
             return course.distance.desc();
         }
         return course.distance.asc();
+    }
+
+    @Override
+    public List<Course> findPreferredCourse(final CoursePreference preference) {
+        return jpaQueryFactory.selectFrom(course)
+                .where(course.isNotNull()
+                        .and(difficultyContains(Collections.singletonList(preference.getDifficultyLevel())))
+                        .and(durationBetween(preference.getDurationLevel())))
+                .fetch();
+    }
+
+    // 거리 필터링
+    private BooleanExpression durationBetween(final DurationLevel level) {
+        if (level != null) {
+            return course.duration
+                    .goe(level.getStartInclusive())
+                    .and(course.duration.lt(level.getEndInclusive()));
+        }
+        return null;
     }
 }

@@ -7,6 +7,7 @@ import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseListItemResponseDto;
+import com.tourapi.mandi.domain.course.dto.CoursePreferredListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.entity.Course;
 import com.tourapi.mandi.global.dto.PageInfoDto;
@@ -24,6 +25,16 @@ public final class CourseMapper {
         return CourseListResponseDto.builder()
                 .pageInfo(new PageInfoDto(page))
                 .courses(courses)
+                .build();
+    }
+
+    public static CoursePreferredListResponseDto toCoursePreferredListResponseDto(final List<Course> courses) {
+        List<CourseListItemResponseDto> coursesPreferred = courses.stream()
+                .map(CourseMapper::toCourseListItemDto)
+                .toList();
+
+        return CoursePreferredListResponseDto.builder()
+                .courses(coursesPreferred)
                 .build();
     }
 

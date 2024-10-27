@@ -5,6 +5,7 @@ import com.tourapi.mandi.domain.course.dto.CourseListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNameResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseNearbyRequestDto;
+import com.tourapi.mandi.domain.course.dto.CoursePreferredListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseReviewListResponseDto;
 import com.tourapi.mandi.domain.course.dto.CourseReviewSearch;
@@ -98,5 +99,16 @@ public class CourseController {
     ) {
         log.info("완주한 코스 목록 조회 호출");
         return ResponseEntity.ok(ApiUtils.success(completedCourseService.getCompletedCourses(userDetails.user())));
+    }
+
+    @Operation(summary = "추천 코스 목록 조회")
+    @ApiResponse(responseCode = "200", description = "추천 코스 목록 조회 성공")
+    @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자 요청 에러")
+    @GetMapping("/preferred")
+    public ResponseEntity<ApiResult<CoursePreferredListResponseDto>> getPreferredCourses(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        log.info("추천 코스 목록 조회 호출");
+        return ResponseEntity.ok(ApiUtils.success(courseService.findPreferredCourses(userDetails.user())));
     }
 }

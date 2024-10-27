@@ -3,6 +3,7 @@ package com.tourapi.mandi.domain.course.repository;
 import com.tourapi.mandi.domain.course.dto.CourseSearchDto;
 import com.tourapi.mandi.domain.course.entity.Coordinate;
 import com.tourapi.mandi.domain.course.entity.Course;
+import com.tourapi.mandi.domain.course.entity.CoursePreference;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -27,6 +28,15 @@ public interface CourseRepositoryCustom {
      * @author LEE-sh1673
      */
     List<Course> findCoursesInBound(Coordinate ne, Coordinate sw);
+
+
+    /**
+     * 코스 선호도 기반 검색을 수행합니다.
+     * @param preference 코스 선호도
+     * @return 코스 선호도에 부합되는 코스 목록
+     * @author LEE-sh1673
+     */
+    List<Course> findPreferredCourse(CoursePreference preference);
 
     Page<Course> findCoursesBySearch(CourseSearchDto courseSearch);
 }
