@@ -1,9 +1,6 @@
 package com.tourapi.mandi.domain.user.service;
 
-import com.tourapi.mandi.domain.course.entity.CoursePreference;
-import com.tourapi.mandi.domain.course.repository.CoursePreferenceRepository;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
-import com.tourapi.mandi.domain.user.dto.CoursePreferenceRequestDto;
 import com.tourapi.mandi.domain.user.dto.ProfileImageChangeRequestDto;
 import com.tourapi.mandi.domain.user.dto.ProfileInfoResponseDto;
 import com.tourapi.mandi.domain.user.dto.ProfileUpdateRequestDto;
@@ -25,7 +22,6 @@ public class ProfileService {
     private final UserService userService;
     private final UserJpaRepository userJpaRepository;
     private final S3ImageClient s3ImageClient;
-    private final CoursePreferenceRepository preferenceRepository;
 
     @Transactional(readOnly = true)
     public boolean checkNicknameDuplication(String nickname) {
@@ -81,18 +77,5 @@ public class ProfileService {
         //유저 정보를 이용해서 원하는 DTO 반환
         return ProfileInfoMapper.toProfileInfoResponseDto(existingUser);
 
-    }
-
-    public Boolean registerPreference(final CoursePreferenceRequestDto requestDto, final User user) {
-        // 유저 정보를 이메일로 조회
-        User existingUser = userService.getExistingUser(user);
-
-        // 선호도 정보 저장
-        CoursePreference coursePreference = ProfileInfoMapper.toCoursePreference(requestDto);
-        preferenceRepository.save(coursePreference);
-
-        // 사용자 선호도 정보 등록
-        existingUser.updatePreference(coursePreference);
-        return true;
     }
 }

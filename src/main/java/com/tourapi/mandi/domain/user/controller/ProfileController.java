@@ -1,6 +1,5 @@
 package com.tourapi.mandi.domain.user.controller;
 
-import com.tourapi.mandi.domain.user.dto.CoursePreferenceRequestDto;
 import com.tourapi.mandi.domain.user.dto.NicknameValidationRequestDto;
 import com.tourapi.mandi.domain.user.dto.ProfileImageChangeRequestDto;
 import com.tourapi.mandi.domain.user.dto.ProfileInfoResponseDto;
@@ -78,18 +77,5 @@ public class ProfileController {
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseEntity.ok(ApiUtils.success(profileService.getProfileInfo(userDetails.user())));
-    }
-
-    @Operation(summary = "코스 선호도 정보 생성")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "선호도 정보 등록 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않은 사용자 정보 인증시"),
-    })
-    @PostMapping("/register-preference")
-    public ResponseEntity<ApiUtils.ApiResult<Boolean>> registerPreference(
-            @RequestBody @Valid CoursePreferenceRequestDto requestDto,
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
-        return ResponseEntity.ok(ApiUtils.success(profileService.registerPreference(requestDto, userDetails.user())));
     }
 }

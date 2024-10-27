@@ -59,7 +59,9 @@ public class LoginController {
     @Operation(summary = "구글 소셜 회원가입 ")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "1. 유효하지 않은 access token 입력시\n2. 유효하지 않은 닉네임/한줄소개 입력시"),
+            @ApiResponse(responseCode = "400",
+                    description = "1. 유효하지 않은 access token 입력시\n2. 유효하지 않은 닉네임/한줄소개 입력시\n3. 유효하지 않은 코스 선호도 입력시"
+            ),
             @ApiResponse(responseCode = "401", description = "유효하지 않은 google token 입력시"),
             @ApiResponse(responseCode = "500", description = "Google API 연동 중 문제 발생시"),
     })

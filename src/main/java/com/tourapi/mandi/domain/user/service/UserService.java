@@ -6,6 +6,8 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tourapi.mandi.domain.badge.entity.BadgeType;
 import com.tourapi.mandi.domain.badge.service.BadgeService;
+import com.tourapi.mandi.domain.course.entity.CoursePreference;
+import com.tourapi.mandi.domain.course.repository.CoursePreferenceRepository;
 import com.tourapi.mandi.domain.user.UserExceptionStatus;
 import com.tourapi.mandi.domain.user.dto.LoginResponseDto;
 import com.tourapi.mandi.domain.user.dto.ReissueDto;
@@ -42,6 +44,7 @@ public class UserService {
     private final TokenService tokenService;
     private final BlackListTokenService blackListTokenService;
     private final BadgeService badgeService;
+    private final CoursePreferenceRepository preferenceRepository;
 
     private final String defaultImageUrl ="https://mandi-image.s3.ap-northeast-2.amazonaws.com/image/default.png";
 
@@ -70,6 +73,13 @@ public class UserService {
         //유저 정보만들고
         User user = UserMapper.toUserFromSignupRequestDto(signupRequestDto, defaultImageUrl, passwordEncoder, userInfo);
         userJpaRepository.save(user);
+
+        // 코스 선호도 정보 만들고
+        CoursePreference coursePreference = UserMapper.toCoursePreference(signupRequestDto);
+        preferenceRepository.save(coursePreference);
+
+        // 코스 선호도 정보 저장
+        user.updatePreference(coursePreference);
 
         //토큰 만들어서 리턴
         String refreshToken = JwtProvider.createRefreshToken(user);

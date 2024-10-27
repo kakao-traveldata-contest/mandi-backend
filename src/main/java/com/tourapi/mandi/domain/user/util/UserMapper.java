@@ -1,6 +1,10 @@
 package com.tourapi.mandi.domain.user.util;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.tourapi.mandi.domain.course.entity.CoursePreference;
+import com.tourapi.mandi.domain.course.entity.DifficultyLevel;
+import com.tourapi.mandi.domain.course.entity.DurationLevel;
+import com.tourapi.mandi.domain.course.entity.EnvironmentType;
 import com.tourapi.mandi.domain.post.dto.UserDto;
 import com.tourapi.mandi.domain.user.dto.SignupRequestDto;
 import com.tourapi.mandi.domain.user.dto.oauth.OauthUserInfo;
@@ -27,6 +31,19 @@ public final class UserMapper {
                 .imgUrl(defaultImageUrl)
                 .build();
     }
+
+    public static CoursePreference toCoursePreference(final SignupRequestDto requestDto) {
+        DifficultyLevel difficultyLevel = DifficultyLevel.get(requestDto.difficultyLevel()).orElseThrow();
+        DurationLevel durationLevel = DurationLevel.get(requestDto.durationLevel()).orElseThrow();
+        EnvironmentType environmentType = EnvironmentType.get(requestDto.environmentLevel()).orElseThrow();
+
+        return CoursePreference.builder()
+                .difficultyLevel(difficultyLevel)
+                .durationLevel(durationLevel)
+                .environmentType(environmentType)
+                .build();
+    }
+
     public static User toUserFromJwt(DecodedJWT decodedJwt) {
         String email = decodedJwt.getClaim("email").asString();
         Long id = decodedJwt.getClaim("id").asLong();
